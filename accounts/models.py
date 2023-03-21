@@ -19,7 +19,7 @@ class User(models.Model):
         ("mentor", "Mentor"),
         ("student", "Student")
     ]
-    usertype = models.CharField(max_length=2,
+    usertype = models.CharField(max_length=10,
                                 choices=USER_TYPE_CHOICES,
                                 default="student")
     user_profile = models.ImageField(upload_to='images/', blank=True)
@@ -41,6 +41,6 @@ class Student(User):
 
 class Mentor(User):
     specializations = models.ForeignKey(
-        Specialization, related_name="mentor_specialization")  # major
+        Specialization, related_name="mentor_specialization", null=True, blank=True, on_delete=models.SET_NULL)  # major
     tools = models.ManyToManyField(
         Tools, related_name="mentor_tools", blank=True)
