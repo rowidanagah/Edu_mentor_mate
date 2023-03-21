@@ -1,6 +1,6 @@
 from django.db import models
 from tags.models import Tags
-from accounts.models import User
+from django.contrib.auth.models import User
 # Create your models here.
 
 
@@ -18,7 +18,7 @@ class SessionDate(models.Model):
         super(SessionDate, self).save(*args, **kwargs)
 
 
-class RoomSession(models.Model):
+class RoomSession(models.Model): 
     title = models.CharField(max_length=100)
     tags = models.ManyToManyField(Tags, blank=True)
     mentor = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -28,3 +28,4 @@ class RoomSession(models.Model):
     # created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
     ended_at = models.DateTimeField(auto_now=False)
+
