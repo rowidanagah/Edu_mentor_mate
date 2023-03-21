@@ -1,7 +1,5 @@
 from django.db import models
 from django.shortcuts import get_object_or_404
-from markdownfield.models import MarkdownField, RenderedMarkdownField
-from markdownfield.validators import VALIDATOR_STANDARD
 # Create your models here.
 
 from tags.models import Tags
@@ -12,10 +10,8 @@ from roomsession.models import RoomSession
 class BLog(models.Model):
     title = models.CharField(max_length=100)
     # bookmark related stuff
-    content = MarkdownField(rendered_field='text_rendered',
-                            validator=VALIDATOR_STANDARD)
+    content = models.TextField(blank=False, null=False)
 
-    text_rendered = RenderedMarkdownField()
     mentor = models.ForeignKey(User, on_delete=models.CASCADE)
 
     cover_image = models.ImageField(
@@ -33,6 +29,10 @@ class BLog(models.Model):
     @classmethod
     def get_spesific_blog(cls, blog_id):
         return cls.objects.get_object_or_404(blog_id)
+
+    @classmethod
+    def get_blog_by_title(cls, title):
+        return cls.objects.filter(title__contains=title)
 
     # def blog_has_session(self,blog):
     #     return blog.
