@@ -3,7 +3,7 @@ from django.shortcuts import get_object_or_404
 # Create your models here.
 
 from tags.models import Tags
-from accounts.models import User, Mentor
+from django.contrib.auth.models import User
 from roomsession.models import RoomSession
 
 
