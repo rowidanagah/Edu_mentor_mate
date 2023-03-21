@@ -37,7 +37,7 @@ class User(models.Model):
 
 class Student(User):
     favourite_bins = models.ManyToManyField(Tags, blank=True)
-
+    
 
 class Mentor(User):
     specializations = models.ForeignKey(
