@@ -1,6 +1,6 @@
 from django.db import models
 from tags.models import Tags
-from accounts.models import User
+from django.contrib.auth.models import User
 # Create your models here.
 
 from django.utils import timezone
