@@ -3,6 +3,7 @@ from tags.models import Tags, Specialization, Tools
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
@@ -10,26 +11,29 @@ from django.core.validators import *
 
 
 
-class AppUserManager(BaseUserManager):
-	def create_user(self, email, password=None):
-		if not email:
-			raise ValueError('An email is required.')
-		if not password:
-			raise ValueError('A password is required.')
-		email = self.normalize_email(email)
-		user = self.model(email=email)
-		user.set_password(password)
-		user.save()
-		return user
-	def create_superuser(self, email, password=None):
-		if not email:
-			raise ValueError('An email is required.')
-		if not password:
-			raise ValueError('A password is required.')
-		user = self.create_user(email, password)
-		user.is_superuser = True
-		user.save()
-		return user
+class CustomUserManager(BaseUserManager):
+    def create_user(self, email, password, **extra_fields):
+        email = self.normalize_email(email)
+
+        user = self.model(email=email, **extra_fields)
+
+        user.set_password(password)
+
+        user.save()
+
+        return user
+
+    def create_superuser(self, email, password, **extra_fields):
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+
+        if extra_fields.get("is_staff") is not True:
+            raise ValueError("Superuser has to have is_staff being True")
+
+        if extra_fields.get("is_superuser") is not True:
+            raise ValueError("Superuser has to have is_superuser being True")
+
+        return self.create_user(email=email, password=password, **extra_fields)
 
 # Create your models here.
 
@@ -68,7 +72,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Tools, related_name="mentor_tools", blank=True , null=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
-    objects = AppUserManager()
+    objects = CustomUserManager()
     def __str__(self):
 		   return self.username
 
