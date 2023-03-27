@@ -47,6 +47,21 @@ class RoomSession(models.Model):
 
     def save_session_available_dates(self, available_dates):
         for session_date in available_dates:
+            try:
+                # Parse the input string as a datetime object
+                date_obj = datetime.datetime.strptime(
+                    session_date['session_date'], '%Y-%m-%d').date()
+            except ValueError:
+                # Handle the case where the input string is not a valid date
+                raise ValidationError('Invalid date')
+
+            print("----------SESSION---------------------------------",
+                  type(session_date['session_date']), session_date)
+
+            # get date object if exists yet create a new date object
+            session_date_obj, _ = SessionDate.objects.get_or_create(
+                session_date=date_obj )
+            session_date_obj.reserved = session_date['reserved']
             session_date_obj, _ = SessionDate.objects.get_or_create(
                 session_date=session_date['session_date']
             )
@@ -57,9 +72,20 @@ class RoomSession(models.Model):
     def update_session_available_dates(self, available_dates):
         updated_session_dates = []
         for session_date in available_dates:
+            try:
+                # Parse the input string as a datetime object
+                date_obj = datetime.datetime.strptime(
+                    session_date['session_date'], '%Y-%m-%d').date()
+            except ValueError:
+                # Handle the case where the input string is not a valid date
+                raise ValidationError('Invalid date')
+
+            print("----------SESSION---------------------------------",
+                  type(session_date['session_date']), session_date)
+
+            # get date object if exists yet create a new date object
             session_date_obj, _ = SessionDate.objects.get_or_create(
-                session_date=session_date['session_date']
-            )
+                session_date=date_obj )
             session_date_obj.reserved = session_date['reserved']
             session_date_obj.save()
             
