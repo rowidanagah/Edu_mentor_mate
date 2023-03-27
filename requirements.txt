@@ -51,3 +51,5 @@ Wand==0.6.11
 webencodings==0.5.1
 Werkzeug==2.2.3
 WTForms==3.0.1
+ipython
+
