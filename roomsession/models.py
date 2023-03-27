@@ -13,13 +13,13 @@ from django.core.exceptions import ValidationError
 
 
 class SessionDate(models.Model):
-    datetime = models.DateField(auto_now=False, unique=True)
+    session_date = models.DateField(auto_now=False, unique=True)
     reserved = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
-        print("-------datetime-------", self.datetime)
-        if self.datetime < timezone.now().date():
+        print("-------datetime-------", self.session_date)
+        if self.session_date < timezone.now().date():
 
             raise ValidationError("The date cannot be in the past!")
         super(SessionDate, self).save(*args, **kwargs)
@@ -48,14 +48,21 @@ class RoomSession(models.Model):
     def save_session_available_dates(self, available_dates):
         for session_date in available_dates:
             session_date_obj, _ = SessionDate.objects.get_or_create(
-                id=session_date['id'])
+                session_date=session_date['session_date']
+            )
+            session_date_obj.reserved = session_date['reserved']
+            session_date_obj.save()
             self.available_dates.add(session_date_obj)
 
     def update_session_available_dates(self, available_dates):
         updated_session_dates = []
         for session_date in available_dates:
             session_date_obj, _ = SessionDate.objects.get_or_create(
-                id=session_date['id'])
+                session_date=session_date['session_date']
+            )
+            session_date_obj.reserved = session_date['reserved']
+            session_date_obj.save()
+            
             print("------------------------", session_date)
             print("---------obj---------------", session_date['reserved'])
             print(session_date_obj)
