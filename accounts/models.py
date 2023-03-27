@@ -90,20 +90,3 @@ class StudentManger(models.Manager):
 class MentorManger(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(usertype="mentor")
-
-
-class Student(User):
-    usertype ="student"
-    objects = StudentManger()
-    class Meta:
-	    proxy =True
-	    
-	    
-
-
-class Mentor(User):
-    usertype="mentor"
-    objects = MentorManger()
-    class Meta :
-	    proxy=True
-	    

@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'blogs',
     'tags',
     'accounts',
+    'reactions',
     'roomsession'
 ]
 

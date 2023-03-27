@@ -1,9 +1,9 @@
 from django.db.models import Avg
-from sessions.models import Session
+from roomsession.models import SessionDate, RoomSession
 from django.db import models
 
 # Create your models here.
-from accounts.models import Mentor, Student, User
+from accounts.models import User
 from blogs.models import BLog
 
 
@@ -33,8 +33,8 @@ class Likes(models.Model):
         return cls.objects.filter(blog=blog, isLike=False).count()
 
     @classmethod
-    def get_user_reaction_on_blog(cls, user):
-        return cls.objects.filter(user=user)
+    def get_user_reaction_on_blog(cls, user, blog):
+        return cls.objects.filter(user=user, blog=blog)
 
 
 class SessionRate(models.Model):
