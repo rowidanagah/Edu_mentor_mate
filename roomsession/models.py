@@ -1,7 +1,9 @@
 from django.shortcuts import get_object_or_404
 from django.db import models
 from tags.models import Tags
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
+
+from accounts.models import User
 # Create your models here.
 
 from django.utils import timezone

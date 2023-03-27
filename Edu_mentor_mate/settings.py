@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'Edu_mentor_mate.wsgi.application'
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
+    # 'default'
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
@@ -148,3 +148,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 MEDIA_ROOT = BASE_DIR / "media"
+
+
+
+AUTH_USER_MODEL = 'accounts.User'
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',
+    ),
+}

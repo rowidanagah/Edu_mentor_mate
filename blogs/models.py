@@ -6,6 +6,8 @@ from tags.models import Tags
 from django.contrib.auth.models import User
 from roomsession.models import RoomSession
 
+from accounts.models import User
+
 
 class BLog(models.Model):
     title = models.CharField(max_length=100)
