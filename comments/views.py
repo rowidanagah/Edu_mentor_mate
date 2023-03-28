@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView ,ListAPIView
 from .models import Comment
 from .serializer import CommentSerializer
 # Create your views here.
@@ -28,3 +28,11 @@ class CommentDetail(RetrieveUpdateDestroyAPIView):
         comment = self.get_object()
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class CommentListAPIView(ListAPIView):
+    serializer_class = CommentSerializer
+
+    def get_queryset(self):
+        blog_id = self.kwargs['blog_id']
+        return Comment.objects.filter(blog=blog_id)
