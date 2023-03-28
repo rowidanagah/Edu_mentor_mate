@@ -6,7 +6,6 @@ db.sqlite3
 media
 
 *__pycache__*
-<<<<<<< HEAD
 
 Edu_mentor_mate/config.py
 *.log 
@@ -15,6 +14,4 @@ Edu_mentor_mate/config.py
 pycache/ 
 /media 
 **/__pycache__/
-=======
 venv
->>>>>>> abdallah
