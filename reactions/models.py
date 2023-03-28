@@ -1,5 +1,5 @@
 from django.db.models import Avg
-from roomsession.models import SessionDate, RoomSession
+from roomsession.models import RoomSession
 from django.db import models
 
 # Create your models here.
@@ -8,13 +8,16 @@ from blogs.models import BLog
 
 
 class Likes(models.Model):
-    # idk if we can use normal(abs) User as a fkhere or nope ;)"
+    # idk if we can use normal(abs) User as a fk here or nope ;)"
     user = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_reaction")
 
     blog = models.ForeignKey(BLog, related_name="blog_reaction",
                              on_delete=models.CASCADE)
     isLike = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ['user', 'blog']
 
     @classmethod
     def get_blog_likes(cls, blog):
@@ -38,11 +41,12 @@ class Likes(models.Model):
 
 
 class SessionRate(models.Model):
-    rate = models.IntegerField(min=0, max=5, null=False, blank=False)
+    rate = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=False, null=False)
     student = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name="user_rate_on_session")
     session = models.ForeignKey(
-        Session, on_delete=models.CASCADE, related_name="session_rate")
+        RoomSession, on_delete=models.CASCADE, related_name="session_rate")
 
     @classmethod
     def get_session_avg_rate(cls, session):
@@ -53,20 +57,21 @@ class SessionRate(models.Model):
         return avg
 
 
-# class MentorRate(models.Model):
-#     rate = models.IntegerField(min=0, max=5, null=False, blank=False)
-#     student = models.ForeignKey(
-#         Student, on_delete=models.CASCADE, related_name="user_rate_abt_mentor")
-#     mentor = models.ForeignKey(
-#         Mentor, on_delete=models.CASCADE, related_name="mentor_rate")
+class MentorRate(models.Model):
+    rate = models.DecimalField(
+        max_digits=5, decimal_places=2, blank=False, null=False)
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="user_rate_abt_mentor")
+    mentor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="mentor_rate")
 
-#     @classmethod
-#     def get_session_avg_rate(cls, mentor):
-#         mentor_rate_lst = cls.objects.filter(
-#             mentor=mentor)
-#         avg = round(mentor_rate_lst.aggregate(Avg("rate"))[
-#                     "score__avg"], 2) if mentor_rate_lst else 0
-#         return avg
+    @classmethod
+    def get_session_avg_rate(cls, mentor):
+        mentor_rate_lst = cls.objects.filter(
+            mentor=mentor)
+        avg = round(mentor_rate_lst.aggregate(Avg("rate"))[
+                    "score__avg"], 2) if mentor_rate_lst else 0
+        return avg
 
 
 class SessionFeedback(models.Model):
@@ -75,42 +80,57 @@ class SessionFeedback(models.Model):
 
     massage = models.TextField(max_length=200, null=False, blank=False)
     student = models.ForeignKey(
-        User, on_delete=models.CASCADE, related_name="user feedback")
-    session = models.ForeignKey(Session)
+        User, on_delete=models.CASCADE, related_name="user_feedback")
+    session = models.ForeignKey(
+        RoomSession, related_name='session_feedback', on_delete=models.CASCADE)
 
     @classmethod
     def get_user_feedback_about_session(cls, user):
         return cls.objects.filter(user=user)
 
 
-# class MentorFeedback(models.Model):
-#     massage = models.TextField(max_length=200, null=False, blank=False)
-#     student = models.ForeignKey(
-#         Student, on_delete=models.CASCADE, related_name="student_feedback")
-#     mentor = models.ForeignKey(
-#         Mentor, on_delete=models.CASCADE, related_name="mentor_feedback")
+class MentorFeedback(models.Model):
+    massage = models.TextField(max_length=200, null=False, blank=False)
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="student_feedback")
+    mentor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="mentor_feedback")
 
-#     @classmethod
-#     def get_user_feedback_about_mentor(cls, student):
-#         # list student feedback history
-#         return cls.objects.filter(student=student)
+    class Meta:
+        unique_together = ['student', 'mentor']
 
-#     @classmethod
-#     def get_mentor_feedbacks(cls, mentor):
-#         return cls.objects.filter(mentor=mentor)
+    @classmethod
+    def get_user_feedback_about_mentor(cls, student, mentor):
+        # list student feedback history
+        return cls.objects.filter(student=student, mentor=mentor)
+
+    @classmethod
+    def get_mentor_feedbacks(cls, mentor):
+        # get mentor list of feedbacks
+        return cls.objects.filter(mentor=mentor)
 
 
-# class Follow(models.Model):
-#     class Meta:
-#         unique_together = (('student', 'following_mentor'),)
+class Follow(models.Model):
+    student = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name="student_follow")
+    # following_mentor = models.ManyToManyField(
+    #     Mentor, related_name="following_mentors")
+    following_mentor = models.ForeignKey(
+        User, related_name="following_mentors",  on_delete=models.CASCADE)
+    isfollow = models.BooleanField(default=False)
 
-#     student = models.ForeignKey(
-#         Student, on_delete=models.CASCADE, related_name="student_follow")
-#     # following_mentor = models.ManyToManyField(
-#     #     Mentor, related_name="following_mentors")
-#     following_mentor = models.ForeignKey(
-#         Mentor, related_name="following_mentors")
+    class Meta:
+        unique_together = ['student', 'following_mentor']
 
-#     @ classmethod
-#     def get_student_followers(cls, student):
-#         return cls.objects.filter(student=student)
+    def __str__(self):
+        return str(str(self.student) + ' follows ' + str(self.following_mentor))
+
+    @classmethod
+    def get_student_followers(cls, student):
+        # get all users following mentors
+        return cls.objects.filter(student=student)
+
+    @classmethod
+    def get_student_followers(cls, student, mentor):
+        # get all users following mentors
+        return cls.objects.filter(student=student, mentor=mentor)
