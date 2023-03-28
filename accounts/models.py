@@ -77,11 +77,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 		   return self.username
 
 
-
-
-
-
-
 class StudentManger(models.Manager):
     def get_queryset(self, *args, **kwargs):
         return super().get_queryset(*args, **kwargs).filter(usertype="student")
