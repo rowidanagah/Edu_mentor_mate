@@ -3,7 +3,7 @@ from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
-
+from rest_framework.authtoken.models import Token
 UserModel = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -14,6 +14,7 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 		user_obj = UserModel.objects.create_user(email=clean_data['email'], password=clean_data['password'])
 		user_obj.username = clean_data['username']
 		user_obj.save()
+		Token.objects.create(user=user_obj)
 		return user_obj
 
 class UserLoginSerializer(serializers.Serializer):
@@ -26,12 +27,20 @@ class UserLoginSerializer(serializers.Serializer):
 			raise ValidationError('user not found')
 		return user
 
+
+
+# login view 
+
+
+
+
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserModel
-		# fields = ('email', 'username')
-		fields = "__all__"
-		
+		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
+		# fields = "__all__"
+		# exclude = ('password', )
+
 
 
 
