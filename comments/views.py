@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView ,ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView
 from .models import Comment
 from .serializer import CommentSerializer
 # Create your views here.
@@ -34,5 +34,7 @@ class CommentListAPIView(ListAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        blog_id = self.kwargs['blog_id']
+        # blog_id = self.kwargs['blog_id']
+        blog_id = self.request.query_params.get('blog_id')
+        print('----------BLOG----------', blog_id)
         return Comment.objects.filter(blog=blog_id)
