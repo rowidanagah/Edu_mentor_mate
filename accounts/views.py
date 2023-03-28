@@ -2,12 +2,16 @@ from django.shortcuts import render
 
 # Create your views here.
 from django.contrib.auth import get_user_model, login, logout
-from rest_framework.authentication import SessionAuthentication
+from rest_framework.authentication import SessionAuthentication ,TokenAuthentication
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializers import UserRegisterSerializer, UserLoginSerializer, UserSerializer ,UserUpdateSerializer
+from oauth2_provider.contrib.rest_framework import TokenHasReadWriteScope, TokenHasScope
+
 from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
+from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
+from dj_rest_auth.registration.views import SocialLoginView
 
 
 class UserRegister(APIView):
@@ -28,26 +32,29 @@ class UserLogin(APIView):
 	##
 	def post(self, request):
 		data = request.data
-		assert validate_email(data)
-		assert validate_password(data)
+		# assert validate_email(data)
+		# assert validate_password(data)
 		serializer = UserLoginSerializer(data=data)
 		if serializer.is_valid(raise_exception=True):
 			user = serializer.check_user(data)
+			data={ 'message':"login succefully", 'token':user.auth_token.key  }
 			login(request, user)
-			return Response(serializer.data, status=status.HTTP_200_OK)
+			return Response(data, status=status.HTTP_200_OK)
 
 
 class UserLogout(APIView):
-	permission_classes = (permissions.AllowAny,)
-	authentication_classes = ()
+	permission_classes = (permissions.IsAuthenticated,)
+	authentication_classes = (SessionAuthentication,TokenAuthentication)
 	def post(self, request):
+		request.user.auth_token.delete()
 		logout(request)
+
 		return Response(status=status.HTTP_200_OK)
 
 
 class UserView(APIView):
 	permission_classes = (permissions.IsAuthenticated,)
-	authentication_classes = (SessionAuthentication,)
+	authentication_classes = (SessionAuthentication,TokenAuthentication)
 	##
 	def get(self, request):
 		serializer = UserSerializer(request.user)
@@ -71,3 +78,9 @@ class UpdateUser(APIView):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+
+
+class FacebookLogin(SocialLoginView):
+    adapter_class = FacebookOAuth2Adapter
