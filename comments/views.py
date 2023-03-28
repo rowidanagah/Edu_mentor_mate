@@ -34,7 +34,7 @@ class CommentListAPIView(ListAPIView):
     serializer_class = CommentSerializer
 
     def get_queryset(self):
-        # blog_id = self.kwargs['blog_id']
-        blog_id = self.request.query_params.get('blog_id')
+        # blog_id = self.kwargs['blog_id'] # send blog id in req url
+        blog_id = self.request.query_params.get('blog_id') # using query params
         print('----------BLOG----------', blog_id)
         return Comment.objects.filter(blog=blog_id)
