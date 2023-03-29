@@ -30,7 +30,6 @@ django-jsonform==2.15.0
 django-markdownfield==0.10.0
 django-money==3.0.0
 django-oauth-toolkit==2.2.0
-django-rest-auth==0.9.5
 django-widget-tweaks==1.4.12
 djangorestframework==3.14.0
 executing==1.2.0

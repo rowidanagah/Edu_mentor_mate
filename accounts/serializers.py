@@ -1,9 +1,10 @@
-
+import re
 from django.core.exceptions import ValidationError
 
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
+
 UserModel = get_user_model()
 
 class UserRegisterSerializer(serializers.ModelSerializer):
@@ -48,3 +49,40 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
+	
+
+
+
+
+
+	# custome register serializer for DRF
+from dj_rest_auth.registration.serializers import RegisterSerializer
+
+class CustomRegisterSerializer(RegisterSerializer):
+	
+
+
+  name =serializers.CharField(max_length=50)
+  phone=serializers.CharField(max_length=14)
+  user_profile=serializers.ImageField()
+  date_birth = serializers.DateField()
+  facebook_link = serializers.URLField()
+  github_link = serializers.URLField()
+  instgram_link = serializers.URLField()
+
+  def custom_signup(self, request, user):
+			user.name = self.validated_data.get('name', '')
+			user.phone = self.validated_data.get('phone','')
+			user.user_profile=self.validated_data.get('user_profile','')
+			user.date_birth=self.validated_data.get('date_birth','')
+			user.facebook_link=self.validated_data.get('facebook_link','')
+			user.github_link=self.validated_data.get('github_link','')
+			user.instgram_link=self.validated_data.get('instgram_link','')
+			user.save()
+
+
+			# ____________________________________________
+
+
+  
+ 
