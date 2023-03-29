@@ -30,6 +30,7 @@ urlpatterns = [
     path('api-auth/', include('rest_framework.urls')),
     path('', include('blogs.urls')),
     path('', include('comments.urls')),
+    path('', include('reactions.urls'))
 
 ]
 # ===(osama)===
