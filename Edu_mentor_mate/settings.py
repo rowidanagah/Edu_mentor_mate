@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders',
     'rest_framework',
     'rest_framework.authtoken',
     'dj_rest_auth',
@@ -66,7 +67,18 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
+
+# ######################################### token
+CORS_ORIGIN_WHITELIST = [
+     'http://localhost:3003'
+]
+# CSRF_COOKIE_NAME = "csrftoken"
+# CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
+# CORS_ALLOW_HEADERS = ['*']
+# CORS_ALLOW_CREDENTIALS = True
+################################################33
 
 ROOT_URLCONF = 'Edu_mentor_mate.urls'
 
