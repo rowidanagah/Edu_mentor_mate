@@ -58,6 +58,12 @@ INSTALLED_APPS = [
 ]
 SITE_ID = 1
 
+
+
+
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -191,8 +197,13 @@ REST_AUTH = {
     'JWT_SERIALIZER': 'dj_rest_auth.serializers.JWTSerializer',
     'JWT_SERIALIZER_WITH_EXPIRATION': 'dj_rest_auth.serializers.JWTSerializerWithExpiration',
     'JWT_TOKEN_CLAIMS_SERIALIZER': 'rest_framework_simplejwt.serializers.TokenObtainPairSerializer',
-    'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
-    'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
+    # 'USER_DETAILS_SERIALIZER': 'dj_rest_auth.serializers.UserDetailsSerializer',
+
+    'USER_DETAILS_SERIALIZER': 'accounts.serializers.CustomeUserDetailsSerilizer',
+
+    # 'PASSWORD_RESET_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetSerializer',
+
+    'PASSWORD_RESET_SERIALIZER': 'accounts.serializers.CustomeUserResetPassword',
     'PASSWORD_RESET_CONFIRM_SERIALIZER': 'dj_rest_auth.serializers.PasswordResetConfirmSerializer',
     'PASSWORD_CHANGE_SERIALIZER': 'dj_rest_auth.serializers.PasswordChangeSerializer',
 
@@ -219,3 +230,62 @@ REST_AUTH = {
     'JWT_AUTH_COOKIE_USE_CSRF': False,
     'JWT_AUTH_COOKIE_ENFORCE_CSRF_ON_UNAUTHENTICATED': False,
 }
+
+
+
+# email setting 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'projectdjango823@gmail.com'
+EMAIL_HOST_USER = 'projectdjango823@gmail.com'
+EMAIL_HOST_PASSWORD = 'snuecqvrghguiefc'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 14400
+
+TINYMCE_DEFAULT_CONFIG = {
+    'custom_undo_redo_levels': 100,
+    'selector': 'textarea',
+    "menubar": "file edit view insert format tools table help",
+    'plugins': 'link image preview codesample contextmenu table code lists fullscreen',
+    'toolbar1': 'undo redo | backcolor casechange permanentpen formatpainter removeformat formatselect fontselect fontsizeselect',
+    'toolbar2': 'bold italic underline blockquote | alignleft aligncenter alignright alignjustify '
+               '| bullist numlist | outdent indent | table | link image | codesample | preview code | tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry',
+    'contextmenu': 'formats | link image',
+    'block_formats': 'Paragraph=p; Header 1=h1; Header 2=h2',
+    'fontsize_formats': "8pt 10pt 12pt 14pt 16pt 18pt",
+    'content_style': "body { font-family: Arial; background: white; color: black; font-size: 12pt}",
+    'codesample_languages': [
+        {'text': 'Python', 'value': 'python'}, {'text': 'HTML/XML', 'value': 'markup'},],
+    'image_class_list': [{'title': 'Fluid', 'value': 'img-fluid', 'style': {} }],
+    'width': 'auto',
+    "height": "600px",
+    'image_caption': True,
+}
+
+# send email setting 
+
+# config setting to email verifications
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True   
+ACCOUNT_USERNAME_REQUIRED = False
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+
+LOGIN_URL = 'http://localhost:8000/api/dj-rest-auth/login'
+
+#Following is added to enable registration with email instead of username
+AUTHENTICATION_BACKENDS = (
+ # Needed to login by username in Django admin, regardless of `allauth`
+ "django.contrib.auth.backends.ModelBackend",
+
+ # `allauth` specific authentication methods, such as login by e-mail
+ "allauth.account.auth_backends.AuthenticationBackend",
+)
