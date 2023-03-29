@@ -28,7 +28,8 @@ class bloglist(ListCreateAPIView):
         # queryset = BLog.objects.filter(category__in=blog_categories)
 
         # Using `distinct()` to avoid duplicate blogs
-        queryset = BLog.objects.filter(tags__in=favorite_tags).distinct()
+        queryset = BLog.objects.filter(
+            tags__in=favorite_tags).distinct().order_by('-updated_at')
         return queryset
 
 

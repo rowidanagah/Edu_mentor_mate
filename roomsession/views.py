@@ -19,8 +19,10 @@ def session_list(request):
         print('----------------------USER-----------------------',
               favorite_tags)
         sessions = RoomSession.objects.filter(
-            tags__in=favorite_tags).distinct()
-        serializer = SessionSerializer(sessions, many=True)
+            tags__in=favorite_tags).distinct().order_by('-updated_at')
+
+        serializer = SessionSerializer(
+            sessions, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':
