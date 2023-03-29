@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
+from accounts.serializers import UserSerializer
 
 
 class SessionDateSerializer(serializers.ModelSerializer):
@@ -10,11 +11,14 @@ class SessionDateSerializer(serializers.ModelSerializer):
 
 class SessionSerializer(serializers.ModelSerializer):
     available_dates = SessionDateSerializer(many=True, read_only=True)
+    mentor=UserSerializer()
+    # user_bio = serializers.SerializerMethodField(read_only=True)
+    # bio = serializers.CharField(source='bio', read_only=True)
 
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
-                  'ended_at', 'sessionUrl', 'tags', 'deruration')
+                  'ended_at', 'sessionUrl', 'tags', 'deruration','updated_at')
         #depth = 1
 
     # def create(self, validated_data):
