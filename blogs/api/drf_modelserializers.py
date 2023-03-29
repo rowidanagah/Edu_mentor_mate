@@ -9,6 +9,8 @@ from tags.models import Category, Tags
 from blogs.models import BLog
 # =============================(list)====================================
 
+from django.db.models import Q
+
 
 class bloglist(ListCreateAPIView):
     serializer_class = BlogModelSerializer
@@ -20,7 +22,6 @@ class bloglist(ListCreateAPIView):
     def get_queryset(self):
         user = self.request.user
         # Get user's favorite tags
-        # Assuming tags are stored in user's profile model
         favorite_tags = user.favourite_bins.all()
         print('----------------------USER-----------------------',
               favorite_tags)
@@ -30,6 +31,13 @@ class bloglist(ListCreateAPIView):
         # Using `distinct()` to avoid duplicate blogs
         queryset = BLog.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
+        
+        # using query params
+        blog_search_term = self.request.query_params.get(
+            'title') 
+        if blog_search_term:
+            BLog.objects.filter(Q(title__icontains=blog_search_term) | Q(
+                content__icontains=blog_search_term))
         return queryset
 
 
