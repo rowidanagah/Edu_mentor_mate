@@ -1,3 +1,4 @@
+from tags.models import Tags
 from django.db.models import Avg
 from roomsession.models import RoomSession
 from django.db import models
@@ -134,3 +135,10 @@ class Follow(models.Model):
     def get_student_followers(cls, student, mentor):
         # get all users following mentors
         return cls.objects.filter(student=student, mentor=mentor)
+
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    blog = models.ForeignKey(BLog, on_delete=models.CASCADE)
+    # bin = models.ForeignKey(Bin, on_delete=models.CASCADE, null=True, blank=True)
+    tags = models.ManyToManyField(Tags)
