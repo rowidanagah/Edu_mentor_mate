@@ -83,6 +83,24 @@ class CustomRegisterSerializer(RegisterSerializer):
 
 			# ____________________________________________
 
+from dj_rest_auth.serializers import UserDetailsSerializer
 
-  
+
+# user details override dj_rest_auth 
+class CustomeUserDetailsSerilizer(UserDetailsSerializer):
+								class Meta:
+									model=UserModel
+									fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
+
+
+# password reset done by default
+# you can make user logout when passowrd change
+
+from dj_rest_auth.serializers import PasswordResetSerializer
+class CustomeUserResetPassword(PasswordResetSerializer):
+	pass
+
+
+
+
  
