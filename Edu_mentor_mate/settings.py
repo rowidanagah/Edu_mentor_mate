@@ -72,13 +72,13 @@ MIDDLEWARE = [
 
 # ######################################### token
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3003'
+    'http://localhost:3000'
 ]
 # CSRF_COOKIE_NAME = "csrftoken"
 # CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
 # CORS_ALLOW_HEADERS = ['*']
 # CORS_ALLOW_CREDENTIALS = True
-################################################33
+# 33
 
 ROOT_URLCONF = 'Edu_mentor_mate.urls'
 
@@ -188,13 +188,12 @@ REST_FRAMEWORK = {
     ),
 
     #########
-    #  osama---> for search 
+    #  osama---> for search
     #########
-     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 
+REST_AUTH = {
 
-REST_AUTH={
-    
 }
