@@ -31,10 +31,12 @@ class bloglist(ListCreateAPIView):
         # Using `distinct()` to avoid duplicate blogs
         queryset = BLog.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
-        
+
+        print("-------------------session blog-----------------------",
+              queryset)
         # using query params
         blog_search_term = self.request.query_params.get(
-            'title') 
+            'title')
         if blog_search_term:
             BLog.objects.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))

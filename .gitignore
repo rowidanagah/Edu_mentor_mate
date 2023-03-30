@@ -12,6 +12,6 @@ Edu_mentor_mate/config.py
 *.pot 
 *.pyc 
 pycache/ 
-/media 
+ 
 **/__pycache__/
 venv
