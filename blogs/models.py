@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from roomsession.models import RoomSession
 
 from accounts.models import User
+from tags.models import Category
 
 
 class BLog(models.Model):
@@ -23,6 +24,9 @@ class BLog(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     session = models.ForeignKey(
         RoomSession, related_name="bolg_avaliable_session", null=True, blank=True, on_delete=models.SET_NULL)
+
+    # category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True,
+    #                              related_name='blog_category', blank=True)
 
     @classmethod
     def get_blogs(cls):
