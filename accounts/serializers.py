@@ -4,6 +4,7 @@ from django.core.exceptions import ValidationError
 from rest_framework import serializers
 from django.contrib.auth import get_user_model, authenticate
 from rest_framework.authtoken.models import Token
+from tags.models import Specialization
 
 UserModel = get_user_model()
 
@@ -51,8 +52,12 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
 	
 
-
-
+# 
+# custome specilization serlizer
+class SpecilizationSerlizer(serializers.ModelSerializer):
+    class Meta:
+        model = Specialization
+        fields = '__all__'
 
 
 	# custome register serializer for DRF
@@ -69,6 +74,7 @@ class CustomRegisterSerializer(RegisterSerializer):
   facebook_link = serializers.URLField()
   github_link = serializers.URLField()
   instgram_link = serializers.URLField()
+  specializations=SpecilizationSerlizer(many=True, read_only=True)
 
   def custom_signup(self, request, user):
 			user.name = self.validated_data.get('name', '')
