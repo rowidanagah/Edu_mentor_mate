@@ -53,7 +53,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     usertype = models.CharField(max_length=10,
                                 choices=USER_TYPE_CHOICES,
                                 default="student")
-    user_profile = models.ImageField(upload_to='images/', blank=True)
+    user_profile = models.ImageField(upload_to='images/accounts', blank=True)
+    
     phone_regex = RegexValidator(
         regex=r'^01[1|0|2|5][0-9]{8}$', message='phone must be an egyptian phone number...')
     phone = models.CharField(verbose_name="phone", null=True, validators=[

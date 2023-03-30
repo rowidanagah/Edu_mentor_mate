@@ -39,7 +39,7 @@ class UserLoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserModel
-		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
+		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link','user_profile')
 		# fields = "__all__"
 		# exclude = ('password', )
 

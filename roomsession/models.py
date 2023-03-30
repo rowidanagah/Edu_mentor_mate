@@ -34,9 +34,14 @@ class RoomSession(models.Model):
     deruration = models.TimeField(auto_now=False, auto_now_add=False)
     available_dates = models.ManyToManyField(SessionDate)
     sessionUrl = models.URLField(null=False)
-    # created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)
+    # user_bio = models.TextField(blank=True, null=True, editable=False)
+
+    # def save(self, *args, **kwargs):
+    #     self.user_bio = self.mentor.bio
+    #     super(RoomSession, self).save(*args, **kwargs)
 
     @classmethod
     def get_sessions_details(cls):

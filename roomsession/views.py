@@ -14,8 +14,15 @@ from .models import SessionDate, RoomSession
 @api_view(['GET', 'POST'])
 def session_list(request):
     if request.method == 'GET':
-        sessions = RoomSession.objects.all()
-        serializer = SessionSerializer(sessions, many=True)
+        user = request.user
+        favorite_tags = user.favourite_bins.all()
+        print('----------------------USER-----------------------',
+              favorite_tags)
+        sessions = RoomSession.objects.filter(
+            tags__in=favorite_tags).distinct().order_by('-updated_at')
+
+        serializer = SessionSerializer(
+            sessions, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':
