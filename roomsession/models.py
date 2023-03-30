@@ -27,6 +27,7 @@ class SessionDate(models.Model):
         super(SessionDate, self).save(*args, **kwargs)
 
 
+
 class RoomSession(models.Model):
     title = models.CharField(max_length=100, null=False)
     tags = models.ManyToManyField(Tags, blank=True)

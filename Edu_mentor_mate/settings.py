@@ -72,7 +72,7 @@ MIDDLEWARE = [
 
 # ######################################### token
 CORS_ORIGIN_WHITELIST = [
-     'http://localhost:3003'
+     'http://localhost:3002'
 ]
 # CSRF_COOKIE_NAME = "csrftoken"
 # CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
