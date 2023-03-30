@@ -3,7 +3,6 @@
 *.pot
 __pycache__
 db.sqlite3
-media
 
 *__pycache__*
 
@@ -12,6 +11,5 @@ Edu_mentor_mate/config.py
 *.pot 
 *.pyc 
 pycache/ 
- 
 **/__pycache__/
 venv
