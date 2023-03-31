@@ -22,7 +22,7 @@ def session_list(request):
             tags__in=favorite_tags).distinct().order_by('-updated_at')
 
         serializer = SessionViewSerializer(
-            sessions, many=True)
+            sessions, many=True , context={'request': request})
         return Response(serializer.data)
 
     if request.method == 'POST':
