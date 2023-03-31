@@ -4,6 +4,7 @@ from accounts.serializers import UserSerializer
 from roomsession.serializers import BlogSessionSerializer
 from django.utils import timezone
 from datetime import timedelta
+from comments.models import Comment
 
 
 class BlogModelSerializer(serializers.ModelSerializer):
@@ -11,11 +12,17 @@ class BlogModelSerializer(serializers.ModelSerializer):
         model = BLog
         fields = '__all__'
 
+
 class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
     session = BlogSessionSerializer()
-    cover_image = serializers.ImageField(required=False)
+    # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
+    number_of_comments = serializers.SerializerMethodField()
+
+    def get_number_of_comments(self, obj):
+        print('--------------obj---------------', obj)
+        return Comment.get_blog_number_of_comments(blog=obj)
 
     def get_time_since_created(self, obj):
         now = timezone.now()
@@ -35,7 +42,7 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = BLog
         fields = ('id', 'title', 'content', 'mentor', 'updated_at',
-                  'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created')
+                  'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created', 'number_of_comments')
 
     # def get_cover_image(self, obj):
     #     if obj.cover_image:
