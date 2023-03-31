@@ -18,7 +18,7 @@ class createBlog(CreateAPIView):
    
 
 class bloglist(ListAPIView):
-    serializer_class = BlogModelSerializer
+    serializer_class = BlogViewModelSerializer
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
     # filterset_fields = ['title']
