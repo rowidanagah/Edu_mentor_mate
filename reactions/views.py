@@ -1,3 +1,4 @@
+from accounts.models import User
 from django.shortcuts import render
 from rest_framework.views import APIView
 from blogs.models import BLog
@@ -31,24 +32,20 @@ class LikeAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        blog, user = request.data['blog'], request.user
-        print('----------req data-----------', blog)
-
-        if not blog:
+        print('-------------------DATA', request.data)
+        blog_id, user_id = request.data['blog'], request.data['user']
+        if not blog_id:
             return Response({'error': 'Missing blog_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_id:
+            return Response({'error': 'Missing user_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            blog = Likes.get_user_reaction_on_blog(blog=blog, user=user)
-            print('----------req data-----------', blog)
-
-        except BLog.DoesNotExist:
-            return Response({'error': 'Blog not found'}, status=status.HTTP_404_NOT_FOUND)
+        blog = BLog.get_spesific_blog(blog_id)
+        user = User.objects.filter(user_id=user_id).first()
+        print('----------req data-----------', blog, user_id)
 
         like, created = Likes.objects.get_or_create(user=user, blog=blog)
-
-        if not created:
-            like.isLike = False
-            return Response({'message': 'Like removed'}, status=status.HTTP_200_OK)
-        like.isLike = True
+        print('-----new ', created , like.isLike)
+        like = Likes.toggle_like(like)
         serializer = self.serializer_class(like)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print('----------------------res data' , serializer.data)
+        return Response({'message': 'Like added', "data": serializer.data}, status=status.HTTP_201_CREATED)

@@ -20,9 +20,18 @@ class Likes(models.Model):
     class Meta:
         unique_together = ['user', 'blog']
 
+    def __str__(self):
+        return str(str(self.user) + ' likes ' + str(self.blog))
+
     @classmethod
     def get_blog_likes(cls, blog):
         return cls.objects.filter(blog=blog, isLike=True)
+
+    @classmethod
+    def toggle_like(cls, obj):
+        obj.isLike = not obj.isLike
+        obj.save()
+        return obj
 
     @classmethod
     def get_blog_number_of_likes(cls, blog):
@@ -38,7 +47,7 @@ class Likes(models.Model):
 
     @classmethod
     def get_user_reaction_on_blog(cls, user, blog):
-        return cls.objects.filter(user=user, blog=blog)
+        return cls.objects.get(user=user, blog=blog)
 
 
 class SessionRate(models.Model):
@@ -127,7 +136,7 @@ class Follow(models.Model):
         return str(str(self.student) + ' follows ' + str(self.following_mentor))
 
     @classmethod
-    def get_student_followers(cls, student):
+    def get_student_followers_all_state(cls, student):
         # get all users following mentors
         return cls.objects.filter(student=student)
 
@@ -135,6 +144,10 @@ class Follow(models.Model):
     def get_student_followers(cls, student, mentor):
         # get all users following mentors
         return cls.objects.filter(student=student, mentor=mentor)
+
+    @classmethod
+    def get_is_follow_mentor(cls, student, following_mentor):
+        return cls.objects.filter(student=student, following_mentor=following_mentor)
 
 
 class Favorite(models.Model):

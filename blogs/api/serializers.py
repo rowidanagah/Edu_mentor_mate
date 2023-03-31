@@ -1,10 +1,29 @@
+from reactions.models import Likes, Follow
 from blogs.models import BLog
 from rest_framework import serializers
-from accounts.serializers import UserSerializer
+from accounts.serializers import UserModel
 from roomsession.serializers import BlogSessionSerializer
 from django.utils import timezone
 from datetime import timedelta
 from comments.models import Comment
+
+
+class UserSerializer(serializers.ModelSerializer):
+    followed_by_user = serializers.SerializerMethodField()
+
+    def get_followed_by_user(self, obj):
+        user = self.context['request'].user
+        print('-------------user-----------', user)
+        try:
+            like = Follow.objects.get(student=user, following_mentor=obj)
+            return like.isLike
+        except Follow.DoesNotExist:
+            return False
+    class Meta:
+        model = UserModel
+        fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
+                  'facebook_link', 'github_link', 'instgram_link', 'user_profile')
+
 
 
 class BlogModelSerializer(serializers.ModelSerializer):
@@ -19,6 +38,17 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
     number_of_comments = serializers.SerializerMethodField()
+    liked_by_user = serializers.SerializerMethodField()
+
+    def get_liked_by_user(self, obj):
+        user = self.context['request'].user
+        print('-------------user-----------', user)
+        try:
+            like = Likes.get_user_reaction_on_blog(user=user, blog=obj) 
+            print('----------------------------LIKE STATE', like)
+            return like.isLike 
+        except Likes.DoesNotExist:
+            return False
 
     def get_number_of_comments(self, obj):
         print('--------------obj---------------', obj)
@@ -41,7 +71,7 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BLog
-        fields = ('id', 'title', 'content', 'mentor', 'updated_at',
+        fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at',
                   'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created', 'number_of_comments')
 
     # def get_cover_image(self, obj):

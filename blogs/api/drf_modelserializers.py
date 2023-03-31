@@ -16,7 +16,7 @@ class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
    
-
+from reactions.models import Likes
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
     # queryset = BLog.objects.all()
@@ -36,7 +36,12 @@ class bloglist(ListAPIView):
         # Using `distinct()` to avoid duplicate blogs
         queryset = BLog.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
-
+        
+        # queryset = queryset.annotate(
+        #         liked_by_user=Exists(
+        #             Likes.objects.filter(user=user, blog=OuterRef('pk'), liked=True)
+        #         )
+        #     )
         print("-------------------session blog-----------------------",
               queryset)
         # using query params
