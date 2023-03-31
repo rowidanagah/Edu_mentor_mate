@@ -1,6 +1,5 @@
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
-from accounts.serializers import UserSerializer
 from tags.models import Tags
 from django.utils import timezone
 from datetime import timedelta
@@ -13,6 +12,25 @@ class SessionDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionDate
         fields = '__all__'
+
+
+class UserSerializer(serializers.ModelSerializer):
+    followed_by_user = serializers.SerializerMethodField()
+
+    def get_followed_by_user(self, obj):
+        user = self.context['request'].user
+        print('-------------user-----------', user)
+        try:
+            follow = Follow.get_is_follow_mentor(
+                student=user, following_mentor=obj)
+            return follow.isfollow
+        except Follow.DoesNotExist:
+            return False
+
+    class Meta:
+        model = UserModel
+        fields = ('user_id', 'email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
+                  'facebook_link', 'github_link', 'instgram_link', 'user_profile')
 
 
 class SessionViewSerializer(serializers.ModelSerializer):
