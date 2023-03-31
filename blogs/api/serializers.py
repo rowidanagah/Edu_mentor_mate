@@ -15,15 +15,16 @@ class UserSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         print('-------------user-----------', user)
         try:
-            like = Follow.objects.get(student=user, following_mentor=obj)
-            return like.isLike
+            follow = Follow.get_is_follow_mentor(
+                student=user, following_mentor=obj)
+            return follow.isfollow
         except Follow.DoesNotExist:
             return False
+
     class Meta:
         model = UserModel
-        fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
+        fields = ('user_id', 'email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
                   'facebook_link', 'github_link', 'instgram_link', 'user_profile')
-
 
 
 class BlogModelSerializer(serializers.ModelSerializer):
@@ -44,9 +45,9 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
         user = self.context['request'].user
         print('-------------user-----------', user)
         try:
-            like = Likes.get_user_reaction_on_blog(user=user, blog=obj) 
+            like = Likes.get_user_reaction_on_blog(user=user, blog=obj)
             print('----------------------------LIKE STATE', like)
-            return like.isLike 
+            return like.isLike
         except Likes.DoesNotExist:
             return False
 

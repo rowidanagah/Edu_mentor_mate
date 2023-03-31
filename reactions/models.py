@@ -134,7 +134,12 @@ class Follow(models.Model):
 
     def __str__(self):
         return str(str(self.student) + ' follows ' + str(self.following_mentor))
-
+    
+    @classmethod
+    def toggle_follow(cls, obj):
+        obj.isfollow = not obj.isfollow
+        obj.save()
+        return obj
     @classmethod
     def get_student_followers_all_state(cls, student):
         # get all users following mentors
@@ -147,7 +152,7 @@ class Follow(models.Model):
 
     @classmethod
     def get_is_follow_mentor(cls, student, following_mentor):
-        return cls.objects.filter(student=student, following_mentor=following_mentor)
+        return cls.objects.get(student=student, following_mentor=following_mentor)
 
 
 class Favorite(models.Model):
