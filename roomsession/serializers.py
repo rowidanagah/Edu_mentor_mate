@@ -5,22 +5,20 @@ from tags.models import Tags
 from django.utils import timezone
 from datetime import timedelta
 
+from reactions.models import Likes, Follow
+from accounts.serializers import UserModel
+
 
 class SessionDateSerializer(serializers.ModelSerializer):
     class Meta:
         model = SessionDate
         fields = '__all__'
 
-# class TagSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = Tags
-#         fields = ('caption',)
-
 
 class SessionViewSerializer(serializers.ModelSerializer):
     available_dates = SessionDateSerializer(many=True, read_only=True)
     # tags=TagSerializer(many=True, read_only=True)
-    mentor=UserSerializer()
+    mentor = UserSerializer()
     created_at = serializers.DateTimeField(format='%d %b')
     # user_bio = serializers.SerializerMethodField(read_only=True)
     # bio = serializers.CharField(source='bio', read_only=True)
@@ -41,12 +39,11 @@ class SessionViewSerializer(serializers.ModelSerializer):
             days = int(time_since.total_seconds() / 86400)
             return f"{days} days ago"
 
-
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
-                  'ended_at', 'sessionUrl', 'tags', 'deruration','updated_at','created_at','time_since_created',)
-        #depth = 1
+                  'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at', 'created_at', 'time_since_created',)
+        # depth = 1
 
     # def create(self, validated_data):
     #     print("-------------validation------", validated_data)
@@ -65,9 +62,6 @@ class BlogSessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates',
                   'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at')
-
-
-
 
 
 class SessionSerializer(serializers.ModelSerializer):
