@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer
+from .serializers import SessionSerializer , SessionViewSerializer
 from rest_framework import status
 # Create your views here.
 
@@ -21,11 +21,12 @@ def session_list(request):
         sessions = RoomSession.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
 
-        serializer = SessionSerializer(
+        serializer = SessionViewSerializer(
             sessions, many=True)
         return Response(serializer.data)
 
     if request.method == 'POST':
+        
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
             room_session = serializer.save()

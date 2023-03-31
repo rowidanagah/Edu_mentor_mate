@@ -17,7 +17,7 @@ class SessionDateSerializer(serializers.ModelSerializer):
 #         fields = ('caption',)
 
 
-class SessionSerializer(serializers.ModelSerializer):
+class SessionViewSerializer(serializers.ModelSerializer):
     available_dates = SessionDateSerializer(many=True, read_only=True)
     # tags=TagSerializer(many=True, read_only=True)
     mentor=UserSerializer()
@@ -46,9 +46,6 @@ class SessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
                   'ended_at', 'sessionUrl', 'tags', 'deruration','updated_at','created_at','time_since_created',)
-        
-        
-      
         #depth = 1
 
     # def create(self, validated_data):
@@ -68,3 +65,15 @@ class BlogSessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates',
                   'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at')
+
+
+
+
+
+class SessionSerializer(serializers.ModelSerializer):
+    available_dates = SessionDateSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = RoomSession
+        fields = ('title', 'available_dates', 'mentor',
+                  'ended_at', 'sessionUrl', 'tags', 'deruration')

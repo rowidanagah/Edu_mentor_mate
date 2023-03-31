@@ -7,6 +7,11 @@ from datetime import timedelta
 
 
 class BlogModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BLog
+        fields = '__all__'
+
+class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
     session = BlogSessionSerializer()
     cover_image = serializers.ImageField(required=False)

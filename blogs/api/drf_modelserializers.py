@@ -1,6 +1,6 @@
-from blogs.api.serializers import BlogModelSerializer
+from blogs.api.serializers import BlogModelSerializer , BlogViewModelSerializer
 from blogs.models import BLog
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView , ListAPIView , CreateAPIView
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -12,7 +12,12 @@ from blogs.models import BLog
 from django.db.models import Q
 
 
-class bloglist(ListCreateAPIView):
+class createBlog(CreateAPIView):
+    serializer_class = BlogModelSerializer
+    queryset = BLog.objects.all()
+   
+
+class bloglist(ListAPIView):
     serializer_class = BlogModelSerializer
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
