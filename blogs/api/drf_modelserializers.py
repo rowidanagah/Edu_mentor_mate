@@ -1,6 +1,7 @@
-from blogs.api.serializers import BlogModelSerializer , BlogViewModelSerializer
+from reactions.models import Likes
+from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
 from blogs.models import BLog
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView , ListAPIView , CreateAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from rest_framework.filters import SearchFilter
 from django_filters.rest_framework import DjangoFilterBackend
 
@@ -15,8 +16,8 @@ from django.db.models import Q
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
-   
-from reactions.models import Likes
+
+
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
     # queryset = BLog.objects.all()
@@ -36,19 +37,19 @@ class bloglist(ListAPIView):
         # Using `distinct()` to avoid duplicate blogs
         queryset = BLog.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
-        
+
         # queryset = queryset.annotate(
         #         liked_by_user=Exists(
         #             Likes.objects.filter(user=user, blog=OuterRef('pk'), liked=True)
         #         )
         #     )
-        print("-------------------session blog-----------------------",
-              queryset)
+
         # using query params
         blog_search_term = self.request.query_params.get(
             'title')
+        print('------------------search-------------', blog_search_term)
         if blog_search_term:
-            BLog.objects.filter(Q(title__icontains=blog_search_term) | Q(
+            queryset = queryset.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))
         return queryset
 
