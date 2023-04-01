@@ -32,6 +32,9 @@ class BLog(models.Model):
     def get_blogs(cls):
         return cls.objects.all()
 
+    def __str__(self):
+        return self.title
+
     @classmethod
     def get_spesific_blog(cls, blog_id):
         return get_object_or_404(cls, pk=blog_id)
