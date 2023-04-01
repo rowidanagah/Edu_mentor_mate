@@ -27,7 +27,7 @@ class MyPagination(PageNumberPagination):
 
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
-    pagination_class = MyPagination
+    #pagination_class = MyPagination
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
     # filterset_fields = ['title']
