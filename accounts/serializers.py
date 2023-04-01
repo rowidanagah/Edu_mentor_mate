@@ -43,16 +43,11 @@ class UserSerializer(serializers.ModelSerializer):
 		# fields = "__all__"
 		# exclude = ('password', )
 
-
-
-
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
 	
-
-# 
 # custome specilization serlizer
 class SpecilizationSerlizer(serializers.ModelSerializer):
     class Meta:
@@ -71,19 +66,21 @@ class CustomRegisterSerializer(RegisterSerializer):
   phone=serializers.CharField(max_length=14)
   user_profile=serializers.ImageField()
   date_birth = serializers.DateField()
-  facebook_link = serializers.URLField()
-  github_link = serializers.URLField()
-  instgram_link = serializers.URLField()
-  specializations=SpecilizationSerlizer(many=True, read_only=True)
+  usertype=serializers.CharField()
+  # facebook_link = serializers.URLField()
+  # github_link = serializers.URLField()
+  # instgram_link = serializers.URLField()
+  # specializations=SpecilizationSerlizer()
 
   def custom_signup(self, request, user):
 			user.name = self.validated_data.get('name', '')
 			user.phone = self.validated_data.get('phone','')
 			user.user_profile=self.validated_data.get('user_profile','')
 			user.date_birth=self.validated_data.get('date_birth','')
-			user.facebook_link=self.validated_data.get('facebook_link','')
-			user.github_link=self.validated_data.get('github_link','')
-			user.instgram_link=self.validated_data.get('instgram_link','')
+			user.usertype=self.validated_data.get('usertype','')
+			# user.facebook_link=self.validated_data.get('facebook_link','')
+			# user.github_link=self.validated_data.get('github_link','')
+			# user.instgram_link=self.validated_data.get('instgram_link','')
 			user.save()
 
 
