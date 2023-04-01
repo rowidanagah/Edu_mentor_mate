@@ -12,6 +12,9 @@ from rest_framework import permissions, status
 from .validations import custom_validation, validate_email, validate_password
 from allauth.socialaccount.providers.facebook.views import FacebookOAuth2Adapter
 from dj_rest_auth.registration.views import SocialLoginView
+from dj_rest_auth.registration.views import VerifyEmailView
+from django.utils.translation import gettext_lazy as _
+
 
 
 class UserRegister(APIView):
@@ -82,5 +85,5 @@ class UpdateUser(APIView):
 
 
 
-class FacebookLogin(SocialLoginView):
-    adapter_class = FacebookOAuth2Adapter
+
+
