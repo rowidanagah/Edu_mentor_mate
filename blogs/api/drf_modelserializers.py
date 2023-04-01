@@ -12,14 +12,22 @@ from blogs.models import BLog
 
 from django.db.models import Q
 
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
 
+class MyPagination(PageNumberPagination):
+    page_size = 2  # number of items per page
+    page_size_query_param = 'page_size'  # query parameter for page size
+    max_page_size = 100  # maximum page size
+
 
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
+    pagination_class = MyPagination
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
     # filterset_fields = ['title']
@@ -51,6 +59,8 @@ class bloglist(ListAPIView):
         if blog_search_term:
             queryset = queryset.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))
+            
+        #paginated_queryset = MyPagination().paginate_queryset(queryset)
         return queryset
 
 
