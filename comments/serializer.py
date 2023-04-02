@@ -12,7 +12,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 class CommentSerializer(serializers.ModelSerializer):
     # student = StudentSerializer()
-    student = UserSerializer()
+   # student = UserSerializer()
 
     class Meta:
         model = Comment
