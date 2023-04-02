@@ -39,6 +39,7 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
     number_of_comments = serializers.SerializerMethodField()
+    number_of_likes = serializers.SerializerMethodField()
     liked_by_user = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField(format='%d %b')
 
@@ -55,6 +56,10 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     def get_number_of_comments(self, obj):
         print('--------------obj---------------', obj)
         return Comment.get_blog_number_of_comments(blog=obj)
+
+    def get_number_of_likes(self, obj):
+        print('--------------obj---------------', obj)
+        return Likes.get_blog_number_of_likes(blog=obj)
 
     def get_time_since_created(self, obj):
         now = timezone.now()
@@ -73,7 +78,7 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BLog
-        fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at',
+        fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at', 'number_of_likes',
                   'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created', 'number_of_comments')
 
     # def get_cover_image(self, obj):
