@@ -28,6 +28,10 @@ class Likes(models.Model):
         return cls.objects.filter(blog=blog, isLike=True)
 
     @classmethod
+    def get_blog_number_of_likes(cls, blog):
+        return cls.objects.filter(blog=blog, isLike=True).count()
+
+    @classmethod
     def toggle_like(cls, obj):
         obj.isLike = not obj.isLike
         obj.save()
@@ -134,12 +138,13 @@ class Follow(models.Model):
 
     def __str__(self):
         return str(str(self.student) + ' follows ' + str(self.following_mentor))
-    
+
     @classmethod
     def toggle_follow(cls, obj):
         obj.isfollow = not obj.isfollow
         obj.save()
         return obj
+
     @classmethod
     def get_student_followers_all_state(cls, student):
         # get all users following mentors
