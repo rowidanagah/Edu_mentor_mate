@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'comments',
     'roomsession',
     'django_filters',
+    'jobs',
 ]
 SITE_ID = 1
 
@@ -200,4 +201,40 @@ REST_FRAMEWORK = {
 
 REST_AUTH = {
 
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_FROM = 'projectdjango823@gmail.com'
+EMAIL_HOST_USER = 'projectdjango823@gmail.com'
+EMAIL_HOST_PASSWORD = 'snuecqvrghguiefc'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+PASSWORD_RESET_TIMEOUT = 14400
+
+TINYMCE_DEFAULT_CONFIG = {
+    'custom_undo_redo_levels': 100,
+    'selector': 'textarea',
+    "menubar": "file edit view insert format tools table help",
+    'plugins': 'link image preview codesample contextmenu table code lists fullscreen',
+    'toolbar1': 'undo redo | backcolor casechange permanentpen formatpainter removeformat formatselect fontselect fontsizeselect',
+    'toolbar2': 'bold italic underline blockquote | alignleft aligncenter alignright alignjustify '
+    '| bullist numlist | outdent indent | table | link image | codesample | preview code | tiny_mce_wiris_formulaEditor tiny_mce_wiris_formulaEditorChemistry',
+    'contextmenu': 'formats | link image',
+    'block_formats': 'Paragraph=p; Header 1=h1; Header 2=h2',
+    'fontsize_formats': "8pt 10pt 12pt 14pt 16pt 18pt",
+    'content_style': "body { font-family: Arial; background: white; color: black; font-size: 12pt}",
+    'codesample_languages': [
+        {'text': 'Python', 'value': 'python'}, {'text': 'HTML/XML', 'value': 'markup'},],
+    'image_class_list': [{'title': 'Fluid', 'value': 'img-fluid', 'style': {} }],
+    'width': 'auto',
+    "height": "600px",
+    'image_caption': True,
+}
+
+APPSCHEDULER_JOBSTORES = {
+    'default': {
+        'type': 'memory',
+    },
 }

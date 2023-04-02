@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from roomsession.models import RoomSession, SessionDate
+from roomsession.models import RoomSession, SessionDate, GmailAccount
 from tags.models import Tags
 from django.utils import timezone
 from datetime import timedelta
@@ -89,3 +89,8 @@ class SessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
                   'ended_at', 'sessionUrl', 'tags', 'deruration')
+        
+class GmailAccountSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GmailAccount
+        fields = ['id', 'email']

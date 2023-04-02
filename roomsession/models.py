@@ -106,3 +106,6 @@ class RoomSession(models.Model):
         self.title = "title"
         self.available_dates.set(updated_session_dates)
         return updated_session_dates
+
+class GmailAccount(models.Model):
+    email = models.EmailField(unique=True)

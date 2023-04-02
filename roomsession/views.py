@@ -2,12 +2,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer , SessionViewSerializer
+from .serializers import SessionSerializer , SessionViewSerializer, GmailAccountSerializer
 from rest_framework import status
 # Create your views here.
 
 from rest_framework.exceptions import NotFound
-from .models import SessionDate, RoomSession
+from .models import SessionDate, RoomSession, GmailAccount
 #################################### get whole sessions and post session ##########################################
 
 
@@ -98,3 +98,17 @@ def update_session(request, pk):
             data['available_dates'])
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#******************************Subscription**********************************
+@api_view(['GET', 'POST'])
+def gmail_account_list(request):
+    if request.method == 'GET':
+        gmail_accounts = GmailAccount.objects.all()
+        serializer = GmailAccountSerializer(gmail_accounts, many=True)
+        return Response(serializer.data)
+    elif request.method == 'POST':
+        serializer = GmailAccountSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors, status=400)
