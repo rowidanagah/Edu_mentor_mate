@@ -71,6 +71,7 @@ class User(AbstractBaseUser, PermissionsMixin):
         Specialization, related_name="mentor_specialization", null=True, blank=True, on_delete=models.SET_NULL)  # major
     tools = models.ManyToManyField(
         Tools, related_name="mentor_tools", blank=True , null=True)
+    is_active=models.BooleanField(default=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = CustomUserManager()
