@@ -1,3 +1,4 @@
+from django.db.models import Count, Subquery, OuterRef
 from reactions.models import Likes
 from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
 from blogs.models import BLog
@@ -15,9 +16,11 @@ from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
+
 
 class MyPagination(PageNumberPagination):
     page_size = 2  # number of items per page
@@ -27,7 +30,7 @@ class MyPagination(PageNumberPagination):
 
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
-    #pagination_class = MyPagination
+    # pagination_class = MyPagination
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
     # filterset_fields = ['title']
@@ -55,12 +58,31 @@ class bloglist(ListAPIView):
         # using query params
         blog_search_term = self.request.query_params.get(
             'title')
+
+        # using query params for trends
+        blogs_trends = self.request.query_params.get(
+            'trends')
+        print('------------TRENDS-------', blogs_trends)
         print('------------------search-------------', blog_search_term)
+
         if blog_search_term:
             queryset = queryset.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))
-            
-        #paginated_queryset = MyPagination().paginate_queryset(queryset)
+
+        if blogs_trends:
+            blog = BLog.objects.all()
+            # blogs = BLog.objects.annotate(
+            #     num_Likes=Count('blog_reaction')).order_by('-num_Likes')
+
+            blogs_trend = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
+                blog_reaction__isLike=True))).order_by('-num_true_likes')[:6]
+
+            # blogs_trend = BLog.objects.annotate(num_true_likes=Count(
+            #     'blog_reaction')).order_by('-num_true_likes')
+
+            return blogs_trend
+        print('---------------out')
+        # paginated_queryset = MyPagination().paginate_queryset(queryset)
         return queryset
 
 
