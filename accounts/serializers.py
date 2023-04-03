@@ -39,14 +39,14 @@ class UserLoginSerializer(serializers.Serializer):
 class UserSerializer(serializers.ModelSerializer):
 	class Meta:
 		model = UserModel
-		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link','user_profile')
+		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link','user_profile','favourite_bins' , 'usertype')
 		# fields = "__all__"
 		# exclude = ('password', )
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link')
+        fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link' ,'favourite_bins')
 	
 # custome specilization serlizer
 class SpecilizationSerlizer(serializers.ModelSerializer):
@@ -67,7 +67,8 @@ class CustomRegisterSerializer(RegisterSerializer):
   user_profile=serializers.ImageField()
   date_birth = serializers.DateField()
   usertype=serializers.CharField()
-  # facebook_link = serializers.URLField()
+
+  #facebook_link = serializers.URLField()
   # github_link = serializers.URLField()
   # instgram_link = serializers.URLField()
   # specializations=SpecilizationSerlizer()
@@ -78,6 +79,7 @@ class CustomRegisterSerializer(RegisterSerializer):
 			user.user_profile=self.validated_data.get('user_profile','')
 			user.date_birth=self.validated_data.get('date_birth','')
 			user.usertype=self.validated_data.get('usertype','')
+			
 			# user.facebook_link=self.validated_data.get('facebook_link','')
 			# user.github_link=self.validated_data.get('github_link','')
 			# user.instgram_link=self.validated_data.get('instgram_link','')
