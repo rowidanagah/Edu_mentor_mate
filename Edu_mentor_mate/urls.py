@@ -30,10 +30,10 @@ urlpatterns = [
     # ===(osama)===
     path('api-auth/', include('rest_framework.urls')),
     path('', include('blogs.urls')),
+    path('', include('tags.urls')),
     path('', include('comments.urls')),
     path('', include('reactions.urls'))
 
 ]
 # ===(osama)===
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
