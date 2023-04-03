@@ -1,3 +1,4 @@
+from comments.serializer import CommentSerializer
 from reactions.models import Likes, Follow
 from blogs.models import BLog
 from rest_framework import serializers
@@ -36,6 +37,8 @@ class BlogModelSerializer(serializers.ModelSerializer):
 class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
     session = BlogSessionSerializer()
+    student_blog_comment = CommentSerializer(many=True, read_only=True)
+
     # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
     number_of_comments = serializers.SerializerMethodField()
@@ -78,7 +81,7 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BLog
-        fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at', 'number_of_likes',
+        fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at', 'number_of_likes', 'student_blog_comment',
                   'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created', 'number_of_comments')
 
     # def get_cover_image(self, obj):
