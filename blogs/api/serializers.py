@@ -8,6 +8,7 @@ from roomsession.serializers import BlogSessionSerializer, SessionViewSerializer
 from django.utils import timezone
 from datetime import timedelta
 from comments.models import Comment
+from comments.serializer import CommentSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -79,6 +80,7 @@ class BlogModelSerializer(serializers.ModelSerializer):
 
 class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
+    student_blog_comment = CommentSerializer(many=True, read_only=True)
     session = BlogSessionSerializer()
     student_blog_comment = CommentSerializer(many=True, read_only=True)
 
