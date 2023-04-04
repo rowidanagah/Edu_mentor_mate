@@ -31,7 +31,8 @@ class SessionDate(models.Model):
 class RoomSession(models.Model):
     title = models.CharField(max_length=100, null=False)
     tags = models.ManyToManyField(Tags, blank=True)
-    mentor = models.ForeignKey(User, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='mentor_session')
     deruration = models.TimeField(auto_now=False, auto_now_add=False)
     available_dates = models.ManyToManyField(SessionDate)
     sessionUrl = models.URLField(null=False)

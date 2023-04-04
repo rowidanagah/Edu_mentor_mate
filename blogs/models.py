@@ -15,7 +15,8 @@ class BLog(models.Model):
     # bookmark related stuff
     content = models.TextField(blank=False, null=False)
 
-    mentor = models.ForeignKey(User, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='mentor_blog')
 
     cover_image = models.ImageField(
         upload_to='images/blogs/', null=True, blank=True)
