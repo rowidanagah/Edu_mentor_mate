@@ -13,5 +13,14 @@ Edu_mentor_mate/config.py
 *.pyc 
 pycache/ 
 /media 
-**/__pycache__/
+**/__pycache__/sett
 venv
+
+*.pyc
+*.log
+*.pot
+__pycache__
+db.sqlite3
+media
+
+*__pycache__*

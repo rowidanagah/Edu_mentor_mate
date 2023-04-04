@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, GenericAPIView
 from .models import Comment
-from .serializer import CommentSerializer
+from .serializer import CommentSerializer,CommentPostSerializer
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework import status
@@ -11,7 +11,12 @@ from rest_framework import status
 
 class CommentList(ListCreateAPIView):
     queryset = Comment.objects.all()
-    serializer_class = CommentSerializer
+    # serializer_class = CommentPostSerializer
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return CommentSerializer
+        elif self.request.method == 'POST':
+            return CommentPostSerializer
 
 
 class CommentDetail(RetrieveUpdateDestroyAPIView):
