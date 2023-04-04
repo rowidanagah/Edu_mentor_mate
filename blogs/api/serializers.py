@@ -1,3 +1,4 @@
+from tags.models import Tags
 from comments.serializer import CommentSerializer
 from reactions.models import Likes, Follow
 from blogs.models import BLog
@@ -28,10 +29,38 @@ class UserSerializer(serializers.ModelSerializer):
                   'facebook_link', 'github_link', 'instgram_link', 'user_profile')
 
 
+class TagSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Tags
+        fields = '__all__'
+
+
 class BlogModelSerializer(serializers.ModelSerializer):
+    tags = TagSerializer(many=True, read_only=False)
+
     class Meta:
         model = BLog
-        fields = '__all__'
+        fields = ('title', 'content', 'tags', 'mentor', 'session')
+
+    # def create(self, validated_data):
+    #     tags_data = validated_data.pop('tags')
+    #     blog = BLog.objects.create(**validated_data)
+    #     for tag_data in tags_data:
+    #         try:
+    #             tag = Tags.objects.get(name=tag_data['name'])
+    #             blog.tags.add(tag)
+    #         except Tags.DoesNotExist:
+    #             tag = Tags.objects.create(**tag_data)
+    #             blog.tags.add(tag)
+    #     return blog
+    def create(self, validated_data):
+        tags_data = validated_data.pop('tags')
+        blog = BLog.objects.create(**validated_data)
+        for tag_data in tags_data:
+            tag_name = tag_data['name']
+            tag, created = Tags.objects.get_or_create(caption=tag_name)
+            blog.tags.add(tag)
+        return blog
 
 
 class BlogViewModelSerializer(serializers.ModelSerializer):
