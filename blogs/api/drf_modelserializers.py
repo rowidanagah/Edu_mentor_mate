@@ -1,25 +1,61 @@
-from django.db.models import Count, Subquery, OuterRef
-from reactions.models import Likes
-from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
-from blogs.models import BLog
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
-from rest_framework.filters import SearchFilter
-from django_filters.rest_framework import DjangoFilterBackend
-
-
-from tags.models import Category, Tags
-from blogs.models import BLog
-# =============================(list)====================================
-
-from django.db.models import Q
-
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
+from rest_framework.pagination import PageNumberPagination
+from django.db.models import Q
+from tags.models import Category, Tags
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
+from blogs.models import BLog
+from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
+from reactions.models import Likes
+from rest_framework import status
+from django.db.models import Count, Subquery, OuterRef
+
+
+# =============================(list)====================================
 
 
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+
+    #     # Save new tags
+    #     tag_names = request.data.getlist('tags')
+    #     print('--------------------', tag_names)
+    #     tags = [Tags.objects.get_or_create(caption=tag_name)[
+    #         0] for tag_name in tag_names]
+
+    #     self.perform_create(serializer, tags)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    # def perform_create(self, serializer, tags):
+    #     serializer.save(tags=tags)
+
+    # def create(self, request, *args, **kwargs):
+    #     # Get the tags data from the request
+    #     tags_data = request.data.pop('tags', [])
+    #     print('-------------------------', tags_data)
+    #     # Call the superclass create() method to create the blog object
+    #     response = super().create(request, *args, **kwargs)
+
+    #     # Create new tag objects for any new tag names
+    #     # for tag_caption in tags_data:
+    #     #     tag, created = Tags.objects.get_or_create(caption=tag_caption)
+    #     #     if created:
+    #     #         tag.save()
+
+    #     #         # # Add the new or existing tag to the blog's tags
+    #     #         # response.data['tags'].append(tag.id)
+    #     #         # response.data['tags_detail'].append(
+    #     #         #     {'id': tag.id, 'caption': tag.name})
+
+    #     # # Return the response
+    #     # return response
 
 
 class MyPagination(PageNumberPagination):
@@ -99,7 +135,7 @@ class bloglist(ListAPIView):
 
 # =============================(RetrieveUpdateDestroyAPIView)============
 class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = BlogModelSerializer
+    serializer_class = BlogViewModelSerializer
     queryset = BLog.objects.all()
 
 # =============================(Filter )=================================

@@ -43,27 +43,27 @@ class UserLoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-<<<<<<< HEAD
+    # class Meta:
+    #     model = UserModel
+    #     fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'user_id',
+    #               'facebook_link', 'github_link', 'instgram_link', 'user_profile')
+    #     # fields = "__all__"
+    #     # exclude = ('password', )
+
     class Meta:
         model = UserModel
-        fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'user_id',
-                  'facebook_link', 'github_link', 'instgram_link', 'user_profile')
+        fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'facebook_link',
+                  'github_link', 'instgram_link', 'user_profile', 'favourite_bins', 'usertype')
         # fields = "__all__"
         # exclude = ('password', )
 
-=======
-	class Meta:
-		model = UserModel
-		fields = ('email', 'username','name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link','user_profile','favourite_bins' , 'usertype')
-		# fields = "__all__"
-		# exclude = ('password', )
->>>>>>> osama
 
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('name', 'bio', 'phone','date_birth','facebook_link','github_link','instgram_link' ,'favourite_bins')
-	
+        fields = ('name', 'bio', 'phone', 'date_birth', 'facebook_link',
+                  'github_link', 'instgram_link', 'favourite_bins')
+
 # custome specilization serlizer
 
 
@@ -101,40 +101,34 @@ class CustomRegisterSerializer(RegisterSerializer):
         # ____________________________________________
 
 
-<<<<<<< HEAD
+# # user details override dj_rest_auth
+#   name =serializers.CharField(max_length=50)
+#   phone=serializers.CharField(max_length=14)
+#   user_profile=serializers.ImageField()
+#   date_birth = serializers.DateField()
+#   usertype=serializers.CharField()
+
+#   #facebook_link = serializers.URLField()
+#   # github_link = serializers.URLField()
+#   # instgram_link = serializers.URLField()
+#   # specializations=SpecilizationSerlizer()
+
+#   def custom_signup(self, request, user):
+# 			user.name = self.validated_data.get('name', '')
+# 			user.phone = self.validated_data.get('phone','')
+# 			user.user_profile=self.validated_data.get('user_profile','')
+# 			user.date_birth=self.validated_data.get('date_birth','')
+# 			user.usertype=self.validated_data.get('usertype','')
+
+# 			# user.facebook_link=self.validated_data.get('facebook_link','')
+# 			# user.github_link=self.validated_data.get('github_link','')
+# 			# user.instgram_link=self.validated_data.get('instgram_link','')
+# 			user.save()
+
+        # ____________________________________________
+
+
 # user details override dj_rest_auth
-=======
-  name =serializers.CharField(max_length=50)
-  phone=serializers.CharField(max_length=14)
-  user_profile=serializers.ImageField()
-  date_birth = serializers.DateField()
-  usertype=serializers.CharField()
-
-  #facebook_link = serializers.URLField()
-  # github_link = serializers.URLField()
-  # instgram_link = serializers.URLField()
-  # specializations=SpecilizationSerlizer()
-
-  def custom_signup(self, request, user):
-			user.name = self.validated_data.get('name', '')
-			user.phone = self.validated_data.get('phone','')
-			user.user_profile=self.validated_data.get('user_profile','')
-			user.date_birth=self.validated_data.get('date_birth','')
-			user.usertype=self.validated_data.get('usertype','')
-			
-			# user.facebook_link=self.validated_data.get('facebook_link','')
-			# user.github_link=self.validated_data.get('github_link','')
-			# user.instgram_link=self.validated_data.get('instgram_link','')
-			user.save()
-
-
-			# ____________________________________________
-
-from dj_rest_auth.serializers import UserDetailsSerializer
-
-
-# user details override dj_rest_auth 
->>>>>>> osama
 class CustomeUserDetailsSerilizer(UserDetailsSerializer):
     class Meta:
         model = UserModel
@@ -147,13 +141,4 @@ class CustomeUserDetailsSerilizer(UserDetailsSerializer):
 
 
 class CustomeUserResetPassword(PasswordResetSerializer):
-<<<<<<< HEAD
     pass
-=======
-	pass
-
-
-
-
- 
->>>>>>> osama

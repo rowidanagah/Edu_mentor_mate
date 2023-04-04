@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer , SessionViewSerializer
+from .serializers import SessionSerializer, SessionViewSerializer
 from rest_framework import status
 # Create your views here.
 
@@ -22,11 +22,13 @@ def session_list(request):
             tags__in=favorite_tags).distinct().order_by('-updated_at')
 
         serializer = SessionViewSerializer(
-            sessions, many=True , context={'request': request})
+            sessions, many=True, context={'request': request})
         return Response(serializer.data)
 
     if request.method == 'POST':
-        
+        tags_name = request.data.pop('tags')
+
+        print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
             room_session = serializer.save()
@@ -49,6 +51,8 @@ def session_list(request):
 
             room_session.save_session_available_dates(
                 data['available_dates'])
+            print('------------------tgas', tags_name)
+            room_session.save_tags(tags_name)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
