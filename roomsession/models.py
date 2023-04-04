@@ -17,12 +17,13 @@ from django.core.exceptions import ValidationError
 class SessionDate(models.Model):
     session_date = models.DateField(auto_now=False, unique=True)
     reserved = models.BooleanField(default=False)
+    reserver = models.ForeignKey(
+        User, null=True, blank=True, related_name='user_reserve', on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
         print("-------datetime-------", self.session_date)
         if self.session_date < timezone.now().date():
-
             raise ValidationError("The date cannot be in the past!")
         super(SessionDate, self).save(*args, **kwargs)
 
@@ -37,6 +38,7 @@ class RoomSession(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)
+
     # user_bio = models.TextField(blank=True, null=True, editable=False)
 
     # def save(self, *args, **kwargs):
