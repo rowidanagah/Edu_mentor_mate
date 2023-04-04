@@ -1,3 +1,4 @@
+from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination
 from django.db.models import Q
@@ -6,7 +7,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from blogs.models import BLog
-from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
+from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer, UserActivitiesSerializer
 from reactions.models import Likes
 from rest_framework import status
 from django.db.models import Count, Subquery, OuterRef
@@ -139,3 +140,8 @@ class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = BLog.objects.all()
 
 # =============================(Filter )=================================
+
+
+class UserActivityAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = UserActivitiesSerializer
+    queryset = User.objects.all()

@@ -4,7 +4,7 @@ from reactions.models import Likes, Follow
 from blogs.models import BLog
 from rest_framework import serializers
 from accounts.serializers import UserModel
-from roomsession.serializers import BlogSessionSerializer
+from roomsession.serializers import BlogSessionSerializer, SessionViewSerializer
 from django.utils import timezone
 from datetime import timedelta
 from comments.models import Comment
@@ -133,3 +133,13 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 
     #         return self.context['request'].build_absolute_uri(obj.cover_image.url)
     #     return ''
+
+
+class UserActivitiesSerializer(serializers.ModelSerializer):
+    mentor_blog = BlogViewModelSerializer(many=True, read_only=True)
+    mentor_session = SessionViewSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = UserModel
+        fields = ('email', 'username', 'name', 'bio', 'phone',
+                  'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog')
