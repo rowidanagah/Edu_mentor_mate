@@ -63,7 +63,8 @@ def session_detail(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = SessionSerializer(session)
+        serializer = SessionViewSerializer(
+            session, context={'request': request})
         return Response(serializer.data)
 
     if request.method == 'DELETE':
