@@ -1,3 +1,4 @@
+from rest_framework import status
 from reactions.models import Likes
 from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer
 from blogs.models import BLog
@@ -15,9 +16,49 @@ from django.db.models import Q
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 
+
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
-    queryset = BLog.objects.all()
+    # queryset = BLog.objects.all()
+
+    # def create(self, request, *args, **kwargs):
+    #     serializer = self.get_serializer(data=request.data)
+    #     serializer.is_valid(raise_exception=True)
+
+    #     # Save new tags
+    #     tag_names = request.data.getlist('tags')
+    #     print('--------------------', tag_names)
+    #     tags = [Tags.objects.get_or_create(caption=tag_name)[
+    #         0] for tag_name in tag_names]
+
+    #     self.perform_create(serializer, tags)
+    #     headers = self.get_success_headers(serializer.data)
+    #     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    # def perform_create(self, serializer, tags):
+    #     serializer.save(tags=tags)
+
+    # def create(self, request, *args, **kwargs):
+    #     # Get the tags data from the request
+    #     tags_data = request.data.pop('tags', [])
+    #     print('-------------------------', tags_data)
+    #     # Call the superclass create() method to create the blog object
+    #     response = super().create(request, *args, **kwargs)
+
+    #     # Create new tag objects for any new tag names
+    #     # for tag_caption in tags_data:
+    #     #     tag, created = Tags.objects.get_or_create(caption=tag_caption)
+    #     #     if created:
+    #     #         tag.save()
+
+    #     #         # # Add the new or existing tag to the blog's tags
+    #     #         # response.data['tags'].append(tag.id)
+    #     #         # response.data['tags_detail'].append(
+    #     #         #     {'id': tag.id, 'caption': tag.name})
+
+    #     # # Return the response
+    #     # return response
+
 
 class MyPagination(PageNumberPagination):
     page_size = 2  # number of items per page
@@ -27,7 +68,7 @@ class MyPagination(PageNumberPagination):
 
 class bloglist(ListAPIView):
     serializer_class = BlogViewModelSerializer
-    #pagination_class = MyPagination
+    # pagination_class = MyPagination
     # queryset = BLog.objects.all()
     # filter_backends = [DjangoFilterBackend,SearchFilter]
     # filterset_fields = ['title']
@@ -59,8 +100,8 @@ class bloglist(ListAPIView):
         if blog_search_term:
             queryset = queryset.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))
-            
-        #paginated_queryset = MyPagination().paginate_queryset(queryset)
+
+        # paginated_queryset = MyPagination().paginate_queryset(queryset)
         return queryset
 
 
