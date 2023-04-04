@@ -75,11 +75,24 @@ class BlogSessionSerializer(serializers.ModelSerializer):
     available_dates = SessionDateSerializer(many=True, read_only=True)
     # user_bio = serializers.SerializerMethodField(read_only=True)
     # bio = serializers.CharField(source='bio', read_only=True)
+    tags = serializers.ListField(
+        child=serializers.CharField(max_length=50), write_only=True
+    )
 
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates',
                   'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at')
+
+    # def create(self, validated_data):
+    #     tag_names = validated_data.pop("tags")
+    #     room_session = RoomSession.objects.create(**validated_data)
+
+    #     for tag_name in tag_names:
+    #         tag, created = Tags.objects.get_or_create(caption=tag_name)
+    #         room_session.tags.add(tag)
+
+    #     return room_session
 
 
 class SessionSerializer(serializers.ModelSerializer):

@@ -36,11 +36,25 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class BlogModelSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True, read_only=False)
+    # tags = TagSerializer(many=True, read_only=False)
+    tags = serializers.ListField(
+        child=serializers.CharField(max_length=50), write_only=True
+    )
 
     class Meta:
         model = BLog
-        fields = ('title', 'content', 'tags', 'mentor', 'session')
+        fields = ('title', 'content', 'tags',
+                  'mentor', 'session', 'cover_image')
+
+    def create(self, validated_data):
+        tag_names = validated_data.pop("tags")
+        blog = BLog.objects.create(**validated_data)
+
+        for tag_name in tag_names:
+            tag, created = Tags.objects.get_or_create(caption=tag_name)
+            blog.tags.add(tag)
+
+        return blog
 
     # def create(self, validated_data):
     #     tags_data = validated_data.pop('tags')
@@ -53,14 +67,14 @@ class BlogModelSerializer(serializers.ModelSerializer):
     #             tag = Tags.objects.create(**tag_data)
     #             blog.tags.add(tag)
     #     return blog
-    def create(self, validated_data):
-        tags_data = validated_data.pop('tags')
-        blog = BLog.objects.create(**validated_data)
-        for tag_data in tags_data:
-            tag_name = tag_data['name']
-            tag, created = Tags.objects.get_or_create(caption=tag_name)
-            blog.tags.add(tag)
-        return blog
+    # def create(self, validated_data):
+    #     tags_data = validated_data.pop('tags')
+    #     blog = BLog.objects.create(**validated_data)
+    #     for tag_data in tags_data:
+    #         tag_name = tag_data['name']
+    #         tag, created = Tags.objects.get_or_create(caption=tag_name)
+    #         blog.tags.add(tag)
+    #     return blog
 
 
 class BlogViewModelSerializer(serializers.ModelSerializer):

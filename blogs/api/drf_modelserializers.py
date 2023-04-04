@@ -19,7 +19,7 @@ from rest_framework.response import Response
 
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
-    # queryset = BLog.objects.all()
+    queryset = BLog.objects.all()
 
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
@@ -118,7 +118,7 @@ class bloglist(ListAPIView):
 
 # =============================(RetrieveUpdateDestroyAPIView)============
 class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = BlogModelSerializer
+    serializer_class = BlogViewModelSerializer
     queryset = BLog.objects.all()
 
 # =============================(Filter )=================================
