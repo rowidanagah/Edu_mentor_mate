@@ -99,7 +99,7 @@ class bloglist(ListAPIView):
 
 # =============================(RetrieveUpdateDestroyAPIView)============
 class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    serializer_class = BlogModelSerializer
+    serializer_class = BlogViewModelSerializer
     queryset = BLog.objects.all()
 
 # =============================(Filter )=================================
