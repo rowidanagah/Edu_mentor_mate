@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('user_id', 'email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
-                  'facebook_link', 'github_link', 'instgram_link', 'user_profile')
+                  'facebook_link', 'github_link', 'instgram_link', 'user_profile', 'favourite_bins')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -145,4 +145,4 @@ class UserActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('email', 'username', 'name', 'bio', 'phone',
-                  'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog')
+                  'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog', 'specializations', 'tools', 'user_profile', 'joinDate',)

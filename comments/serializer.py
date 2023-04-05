@@ -15,7 +15,7 @@ class StudentSerializer(serializers.ModelSerializer):
 class CommentPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('content', 'student', 'blog', 'created_at')
+        fields = ('content', 'student', 'blog', 'created_at', 'id')
 
 
 class CommentSerializer(serializers.ModelSerializer):
@@ -42,7 +42,7 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
         fields = ('content', 'student', 'blog',
-                  'created_at', 'time_since_created')
+                  'created_at', 'time_since_created', 'id')
         ordering = ['-created_at']
 
     # def get_queryset(self):
