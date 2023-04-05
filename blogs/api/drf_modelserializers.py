@@ -138,10 +138,26 @@ class bloglist(ListAPIView):
 class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = BlogViewModelSerializer
     queryset = BLog.objects.all()
+    print('------------------------order')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        res = queryset.prefetch_related('student_blog_comment').order_by(
+            '-student_blog_comment__created_at', '-student_blog_comment__content')
+        print('---------------------------------order by', res)
+        return res
+
 
 # =============================(Filter )=================================
 
 
 class UserActivityAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = UserActivitiesSerializer
-    queryset = User.objects.all()
+    # queryset = User.objects.all()
+    print('------------------------order')
+
+    def get_queryset(self):
+        print('---------------------------------order by')
+        queryset = super().get_queryset()
+        return queryset.prefetch_related('student_blog_comment').order_by('-created_at', '-student_blog_comment__created_at')
