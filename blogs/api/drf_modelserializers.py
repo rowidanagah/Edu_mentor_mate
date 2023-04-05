@@ -84,7 +84,7 @@ class bloglist(ListAPIView):
 
         # Using `distinct()` to avoid duplicate blogs
         queryset = BLog.objects.filter(
-            tags__in=favorite_tags).distinct().order_by('-updated_at')
+            tags__in=favorite_tags).distinct().order_by('-created_at')
 
         # queryset = queryset.annotate(
         #         liked_by_user=Exists(

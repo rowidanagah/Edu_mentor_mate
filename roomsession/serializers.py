@@ -11,6 +11,7 @@ from datetime import datetime
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from accounts.serializers import UserDetailsSerializer
 
+
 class SessionDateSerializer(serializers.ModelSerializer):
     session_date = serializers.DateField(format="%Y-%m-%dT%H:%M")
     formatted_session_date = serializers.SerializerMethodField()
@@ -72,7 +73,7 @@ class SessionViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomSession
-        fields = ('title', 'available_dates', 'mentor', 'description',
+        fields = ('id', 'title', 'available_dates', 'mentor', 'description',
                   'ended_at', 'sessionUrl', 'tags', 'updated_at', 'created_at', 'time_since_created',)
         # depth = 1
 
@@ -137,14 +138,10 @@ class SessionSerializer(serializers.ModelSerializer):
         return super().create(validated_data)
 
 
-
-
 class singleDateSerilizer(serializers.ModelSerializer):
-    reserver=UserDetailsSerializer()
+    reserver = UserDetailsSerializer()
+
     class Meta:
 
         model = SessionDate
         fields = "__all__"
-
-
-

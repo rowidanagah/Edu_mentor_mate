@@ -2,12 +2,12 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer, SessionViewSerializer,singleDateSerilizer
+from .serializers import SessionSerializer, SessionViewSerializer, singleDateSerilizer
 from rest_framework import status
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework import permissions, status
-from rest_framework.authentication import SessionAuthentication ,TokenAuthentication
+from rest_framework.authentication import SessionAuthentication, TokenAuthentication
 from rest_framework.exceptions import NotFound
 from .models import SessionDate, RoomSession
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
@@ -25,7 +25,7 @@ def session_list(request):
         print('----------------------USER-----------------------',
               favorite_tags)
         sessions = RoomSession.objects.filter(
-            tags__in=favorite_tags).distinct().order_by('-updated_at')
+            tags__in=favorite_tags).distinct().order_by('-created_at')
 
         serializer = SessionViewSerializer(
             sessions, many=True, context={'request': request})
@@ -125,23 +125,22 @@ class SingleDateRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     queryset = SessionDate.objects.all()
 
 
-
-
 class singleDateUpdateView(APIView):
     permission_classes = [
         permissions.IsAuthenticated,
     ]
-    authentication_classes = (SessionAuthentication,TokenAuthentication)
-	
-    def patch(self, request,*args, **kwargs):
+    authentication_classes = (SessionAuthentication, TokenAuthentication)
+
+    def patch(self, request, *args, **kwargs):
         pk = kwargs['pk']
         user = request.user
         print("_________________________helo")
-        
+
         session = SessionDate.objects.get(id=pk)
-        session.reserver=request.user
-        print("session______",session.reserver)
-        serializer = singleDateSerilizer(session,data=request.data, partial=True)
+        session.reserver = request.user
+        print("session______", session.reserver)
+        serializer = singleDateSerilizer(
+            session, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
@@ -152,11 +151,11 @@ class singleDateUpdateView(APIView):
         """
         # user = self.request.user
         # serializer = singleDateSerilizer(user, data=request.data, partial=True)
-    def get(self  , request, *args, **kwargs):
-            pk = kwargs['pk']
 
-            session = SessionDate.objects.get(id=pk)
-            serializer = singleDateSerilizer(session)
-            print(session)
-            return Response(serializer.data)
-                
+    def get(self, request, *args, **kwargs):
+        pk = kwargs['pk']
+
+        session = SessionDate.objects.get(id=pk)
+        serializer = singleDateSerilizer(session)
+        print(session)
+        return Response(serializer.data)
