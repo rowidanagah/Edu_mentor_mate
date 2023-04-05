@@ -5,7 +5,7 @@ from .serializer import CommentSerializer,CommentPostSerializer
 # Create your views here.
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.decorators import api_view
 
 # ================ Handle Comment Section ============
 
@@ -46,3 +46,18 @@ class CommentListAPIView(ListAPIView):
             'blog_id')  # using query params
         print('----------BLOG----------', blog_id)
         return Comment.objects.filter(blog=blog_id)
+    
+
+
+@api_view(['DELETE'])
+def delete_specific_comment(request, pk):
+    try:
+        comment = Comment.objects.get(id=pk)
+    except Comment.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'DELETE':
+        comment.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+

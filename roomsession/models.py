@@ -39,6 +39,8 @@ class RoomSession(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)
+    read_time=models.CharField(max_length=10, null=True)
+
 
     # user_bio = models.TextField(blank=True, null=True, editable=False)
 
