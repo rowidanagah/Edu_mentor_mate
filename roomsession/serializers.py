@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
 from accounts.serializers import UserSerializer
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 
 
 class SessionDateSerializer(serializers.ModelSerializer):
@@ -38,3 +39,16 @@ class BlogSessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates',
                   'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at')
+
+
+
+
+class singleDateSerilizer(serializers.ModelSerializer):
+    
+    class Meta:
+
+        model = SessionDate
+        fields = "__all__"
+
+
+
