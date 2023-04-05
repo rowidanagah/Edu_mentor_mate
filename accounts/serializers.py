@@ -53,7 +53,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'facebook_link',
-                  'github_link', 'instgram_link', 'user_profile', 'favourite_bins', 'usertype')
+                  'github_link', 'instgram_link', 'user_profile', 'favourite_bins', 'usertype','user_id')
         # fields = "__all__"
         # exclude = ('password', )
 
