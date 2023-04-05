@@ -1,6 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
+from .models import User
+from rest_framework.decorators import api_view
 from django.contrib.auth import get_user_model, login, logout
 from rest_framework.authentication import SessionAuthentication ,TokenAuthentication
 from rest_framework.views import APIView
@@ -83,6 +85,17 @@ class UpdateUser(APIView):
 
 
     
+
+@api_view(['GET'])
+def get_specific_user(request, pk):
+    try:
+        user = User.objects.get(user_id=pk)
+    except User.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+
+    if request.method == 'GET':
+        serializer = UserSerializer(user)
+        return Response(serializer.data)
 
 
 

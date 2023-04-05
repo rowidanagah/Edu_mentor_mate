@@ -1,14 +1,16 @@
+from rest_framework import serializers
+from accounts.models import User
 from django.shortcuts import render
 from rest_framework.views import APIView
 from blogs.models import BLog
-from reactions.models import Likes
+from reactions.models import Likes, Follow
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 
-from .serializers import LikeSerializer
+from .serializers import LikeSerializer, followSerializer
 # Create your views here.
 
 
@@ -31,24 +33,48 @@ class LikeAPIView(APIView):
     # permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        blog, user = request.data['blog'], request.user
-        print('----------req data-----------', blog)
-
-        if not blog:
+        print('-------------------DATA', request.data)
+        blog_id, user_id = request.data['blog'], request.data['user']
+        if not blog_id:
             return Response({'error': 'Missing blog_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_id:
+            return Response({'error': 'Missing user_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            blog = Likes.get_user_reaction_on_blog(blog=blog, user=user)
-            print('----------req data-----------', blog)
-
-        except BLog.DoesNotExist:
-            return Response({'error': 'Blog not found'}, status=status.HTTP_404_NOT_FOUND)
+        blog = BLog.get_spesific_blog(blog_id)
+        user = User.objects.filter(user_id=user_id).first()
+        print('----------req data-----------', blog, user_id)
 
         like, created = Likes.objects.get_or_create(user=user, blog=blog)
-
-        if not created:
-            like.isLike = False
-            return Response({'message': 'Like removed'}, status=status.HTTP_200_OK)
-        like.isLike = True
+        print('-----new ', created, like.isLike)
+        like = Likes.toggle_like(like)
         serializer = self.serializer_class(like)
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        print('----------------------res data', serializer.data)
+        return Response({'message': 'Like added', "data": serializer.data}, status=status.HTTP_201_CREATED)
+
+
+class followAPIView(APIView):
+    serializer_class = followSerializer
+    # permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        print('-------------------DATA', request.data)
+        mentor_id, user_id = request.data['following_mentor'], request.data['student']
+        if not mentor_id:
+            return Response({'error': 'Missing following_mentor_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
+        if not user_id:
+            return Response({'error': 'Missing user_id parameter'}, status=status.HTTP_400_BAD_REQUEST)
+
+        if user_id == mentor_id:
+            raise serializers.ValidationError(
+                "A user cannot follow themselves.")
+        mentor = User.objects.filter(user_id=mentor_id).first()
+        user = User.objects.filter(user_id=user_id).first()
+        print('----------req data-----------', mentor, user)
+
+        follow, created = Follow.objects.get_or_create(
+            student=user, following_mentor=mentor)
+        print('-----new ', created, follow.isfollow)
+        follow = Follow.toggle_follow(follow)
+        serializer = self.serializer_class(follow)
+        print('----------------------res data', serializer.data)
+        return Response({'message': 'follow added', "data": serializer.data}, status=status.HTTP_201_CREATED)

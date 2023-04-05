@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.db import models
 from tags.models import Tags
-#from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
 
 from accounts.models import User
 # Create your models here.
@@ -17,12 +17,13 @@ from django.core.exceptions import ValidationError
 class SessionDate(models.Model):
     session_date = models.DateField(auto_now=False, unique=True)
     reserved = models.BooleanField(default=False)
+    reserver = models.ForeignKey(
+        User, null=True, blank=True, related_name='user_reserve', on_delete=models.SET_NULL)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
         print("-------datetime-------", self.session_date)
         if self.session_date < timezone.now().date():
-
             raise ValidationError("The date cannot be in the past!")
         super(SessionDate, self).save(*args, **kwargs)
 
@@ -30,13 +31,15 @@ class SessionDate(models.Model):
 class RoomSession(models.Model):
     title = models.CharField(max_length=100, null=False)
     tags = models.ManyToManyField(Tags, blank=True)
-    mentor = models.ForeignKey(User, on_delete=models.CASCADE)
+    mentor = models.ForeignKey(
+        User, on_delete=models.CASCADE, related_name='mentor_session')
     deruration = models.TimeField(auto_now=False, auto_now_add=False)
     available_dates = models.ManyToManyField(SessionDate)
     sessionUrl = models.URLField(null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)
+
     # user_bio = models.TextField(blank=True, null=True, editable=False)
 
     # def save(self, *args, **kwargs):
@@ -67,7 +70,7 @@ class RoomSession(models.Model):
 
             # get date object if exists yet create a new date object
             session_date_obj, _ = SessionDate.objects.get_or_create(
-                session_date=date_obj )
+                session_date=date_obj)
             session_date_obj.reserved = session_date['reserved']
             session_date_obj, _ = SessionDate.objects.get_or_create(
                 session_date=session_date['session_date']
@@ -75,6 +78,11 @@ class RoomSession(models.Model):
             session_date_obj.reserved = session_date['reserved']
             session_date_obj.save()
             self.available_dates.add(session_date_obj)
+
+    def save_tags(self, tag_names):
+        for tag_name in tag_names:
+            tag, created = Tags.objects.get_or_create(caption=tag_name)
+            self.tags.add(tag)
 
     def update_session_available_dates(self, available_dates):
         updated_session_dates = []
@@ -92,10 +100,10 @@ class RoomSession(models.Model):
 
             # get date object if exists yet create a new date object
             session_date_obj, _ = SessionDate.objects.get_or_create(
-                session_date=date_obj )
+                session_date=date_obj)
             session_date_obj.reserved = session_date['reserved']
             session_date_obj.save()
-            
+
             print("------------------------", session_date)
             print("---------obj---------------", session_date['reserved'])
             print(session_date_obj)

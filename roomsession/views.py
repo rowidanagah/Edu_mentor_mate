@@ -2,7 +2,7 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer,singleDateSerilizer
+from .serializers import SessionSerializer, SessionViewSerializer,singleDateSerilizer
 from rest_framework import status
 # Create your views here.
 from rest_framework.views import APIView
@@ -25,11 +25,14 @@ def session_list(request):
         sessions = RoomSession.objects.filter(
             tags__in=favorite_tags).distinct().order_by('-updated_at')
 
-        serializer = SessionSerializer(
-            sessions, many=True)
+        serializer = SessionViewSerializer(
+            sessions, many=True, context={'request': request})
         return Response(serializer.data)
 
     if request.method == 'POST':
+        tags_name = request.data.pop('tags')
+
+        print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
             room_session = serializer.save()
@@ -52,6 +55,8 @@ def session_list(request):
 
             room_session.save_session_available_dates(
                 data['available_dates'])
+            print('------------------tgas', tags_name)
+            room_session.save_tags(tags_name)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -66,7 +71,8 @@ def session_detail(request, pk):
         return Response(status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = SessionSerializer(session)
+        serializer = SessionViewSerializer(
+            session, context={'request': request})
         return Response(serializer.data)
 
     if request.method == 'DELETE':
