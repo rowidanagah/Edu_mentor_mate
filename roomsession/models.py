@@ -37,7 +37,7 @@ class RoomSession(models.Model):
     mentor = models.ForeignKey(
         User, on_delete=models.CASCADE, related_name='mentor_session')
     available_dates = models.ManyToManyField(SessionDate)
-    sessionUrl = models.URLField(null=False)
+    sessionUrl = models.URLField(null=False, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)

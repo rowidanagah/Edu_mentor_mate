@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
 from tags.models import Tags
@@ -113,3 +114,23 @@ class SessionSerializer(serializers.ModelSerializer):
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
                   'ended_at', 'sessionUrl', 'tags')
+
+    def validate_end_date(self, value):
+        """
+        Check that end_date is not in the past.
+        """
+        if value < timezone.now():
+            raise serializers.ValidationError(
+                "End date cannot be in the past.")
+        return value
+
+    def create(self, validated_data):
+        print('generate session_url')
+        session_url_code = 'rs-{}-{}'.format(validated_data['mentor'],
+                                             get_random_string(length=20))
+
+        # validated_data[
+        #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
+        validated_data[
+            'sessionUrl'] = f"http://127.0.0.1:3000/room/hash/{session_url_code}"
+        return super().create(validated_data)
