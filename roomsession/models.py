@@ -42,6 +42,7 @@ class RoomSession(models.Model):
     updated_at = models.DateField(auto_now=True, null=True, blank=True)
     ended_at = models.DateField(auto_now=False)
     description = models.TextField(blank=False, null=False)
+    # read_time=models.CharField(max_length=10, null=True)
 
     # user_bio = models.TextField(blank=True, null=True, editable=False)
 
