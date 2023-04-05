@@ -15,16 +15,14 @@ class StudentSerializer(serializers.ModelSerializer):
 class CommentPostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment
-        fields = ('content', 'student','blog','created_at')
-
-
+        fields = ('content', 'student', 'blog', 'created_at')
 
 
 class CommentSerializer(serializers.ModelSerializer):
     student = UserSerializer()
     created_at = serializers.DateTimeField(format='%d %b')
     time_since_created = serializers.SerializerMethodField()
-    
+    # order comments by created_at field in descending order
 
     def get_time_since_created(self, obj):
         now = timezone.now()
@@ -41,8 +39,16 @@ class CommentSerializer(serializers.ModelSerializer):
             days = int(time_since.total_seconds() / 86400)
             return f"{days} days ago"
 
-    
-
     class Meta:
         model = Comment
-        fields = ('content', 'student','blog','created_at','time_since_created')
+        fields = ('content', 'student', 'blog',
+                  'created_at', 'time_since_created')
+        ordering = ['-created_at']
+
+    # def get_queryset(self):
+    #     queryset = super().get_queryset()
+    #     if self.context.get('order_by') == 'title':
+    #         queryset = queryset.order_by('title')
+    #     elif self.context.get('order_by') == '-created_at':
+    #         queryset = queryset.order_by('-created_at')
+    #     return queryset

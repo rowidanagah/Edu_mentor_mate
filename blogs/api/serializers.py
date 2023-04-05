@@ -80,9 +80,10 @@ class BlogModelSerializer(serializers.ModelSerializer):
 
 class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
-    student_blog_comment = CommentSerializer(many=True, read_only=True)
+    student_blog_comment = CommentSerializer(
+        many=True, read_only=True)
     session = BlogSessionSerializer()
-    student_blog_comment = CommentSerializer(many=True, read_only=True)
+   # student_blog_comment = CommentSerializer(many=True, read_only=True)
 
     # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
