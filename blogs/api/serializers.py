@@ -27,7 +27,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('user_id', 'email', 'username', 'name', 'bio', 'phone', 'date_birth', 'followed_by_user',
-                  'facebook_link', 'github_link', 'instgram_link', 'user_profile')
+                  'facebook_link', 'github_link', 'instgram_link', 'user_profile','favourite_bins')
 
 
 class TagSerializer(serializers.ModelSerializer):
@@ -82,7 +82,6 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
     student_blog_comment = CommentSerializer(many=True, read_only=True)
     session = BlogSessionSerializer()
-    student_blog_comment = CommentSerializer(many=True, read_only=True)
 
     # cover_image = serializers.ImageField(required=False)
     time_since_created = serializers.SerializerMethodField()
@@ -144,4 +143,4 @@ class UserActivitiesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
         fields = ('email', 'username', 'name', 'bio', 'phone',
-                  'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog')
+                  'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog','specializations','tools','user_profile','joinDate',)
