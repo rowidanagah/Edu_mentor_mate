@@ -124,8 +124,12 @@ class singleDateUpdateView(APIView):
 	
     def patch(self, request,*args, **kwargs):
         pk = kwargs['pk']
-
+        user = request.user
+        print("_________________________helo")
+        
         session = SessionDate.objects.get(id=pk)
+        session.reserver=request.user
+        print("session______",session.reserver)
         serializer = singleDateSerilizer(session,data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()

@@ -7,7 +7,7 @@ from datetime import timedelta
 from reactions.models import Likes, Follow
 from accounts.serializers import UserModel
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
-
+from accounts.serializers import UserDetailsSerializer
 
 class SessionDateSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,7 +108,7 @@ class SessionSerializer(serializers.ModelSerializer):
 
 
 class singleDateSerilizer(serializers.ModelSerializer):
-    
+    reserver=UserDetailsSerializer()
     class Meta:
 
         model = SessionDate
