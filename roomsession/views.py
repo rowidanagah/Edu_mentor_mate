@@ -14,6 +14,8 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 
 #################################### get whole sessions and post session ##########################################
 
+from django.urls import reverse
+
 
 @api_view(['GET', 'POST'])
 def session_list(request):
@@ -35,6 +37,7 @@ def session_list(request):
         print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
+            print('-------ment', request.data['mentor'])
             room_session = serializer.save()
 
             data = request.data
@@ -57,6 +60,14 @@ def session_list(request):
                 data['available_dates'])
             print('------------------tgas', tags_name)
             room_session.save_tags(tags_name)
+
+            # session_url = reverse('session-detail', args=[serializer.da.id])
+
+            # data = {
+            #     request.data,
+            #     'url': request.build_absolute_uri(session_url),
+
+            # }
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

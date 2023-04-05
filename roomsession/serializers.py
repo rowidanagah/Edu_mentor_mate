@@ -1,3 +1,4 @@
+from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
 from tags.models import Tags
@@ -6,13 +7,24 @@ from datetime import timedelta
 
 from reactions.models import Likes, Follow
 from accounts.serializers import UserModel
+from datetime import datetime
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
 from accounts.serializers import UserDetailsSerializer
 
 class SessionDateSerializer(serializers.ModelSerializer):
+    session_date = serializers.DateField(format="%Y-%m-%dT%H:%M")
+    formatted_session_date = serializers.SerializerMethodField()
+
     class Meta:
         model = SessionDate
-        fields = '__all__'
+        fields = ('session_date', 'reserved', 'deruration',
+                  'reserver', 'formatted_session_date')
+
+    def get_formatted_session_date(self, obj):
+        return obj.session_date.strftime("%B %d, %Y at %I:%M %p")
+    # def create(self, validated_data):
+    #     session_date_str = validated_data.get('session_date')
+    #     session_date = datetime.strptime(session_date_str, "%Y-%m-%dT%H:%M:%S")
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -60,8 +72,8 @@ class SessionViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomSession
-        fields = ('title', 'available_dates', 'mentor',
-                  'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at', 'created_at', 'time_since_created',)
+        fields = ('title', 'available_dates', 'mentor', 'description',
+                  'ended_at', 'sessionUrl', 'tags', 'updated_at', 'created_at', 'time_since_created',)
         # depth = 1
 
     # def create(self, validated_data):
@@ -83,7 +95,7 @@ class BlogSessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates',
-                  'ended_at', 'sessionUrl', 'tags', 'deruration', 'updated_at')
+                  'ended_at', 'sessionUrl', 'tags', 'updated_at')
 
     # def create(self, validated_data):
     #     tag_names = validated_data.pop("tags")
@@ -102,7 +114,27 @@ class SessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
-                  'ended_at', 'sessionUrl', 'tags', 'deruration')
+                  'ended_at', 'sessionUrl', 'tags')
+
+    def validate_end_date(self, value):
+        """
+        Check that end_date is not in the past.
+        """
+        if value < timezone.now():
+            raise serializers.ValidationError(
+                "End date cannot be in the past.")
+        return value
+
+    def create(self, validated_data):
+        print('generate session_url')
+        session_url_code = 'rs-{}-{}'.format(validated_data['mentor'],
+                                             get_random_string(length=20))
+
+        # validated_data[
+        #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
+        validated_data[
+            'sessionUrl'] = f"http://127.0.0.1:3000/room/hash/{session_url_code}"
+        return super().create(validated_data)
 
 
 
