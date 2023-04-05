@@ -2,12 +2,16 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from .models import RoomSession
-from .serializers import SessionSerializer
+from .serializers import SessionSerializer,singleDateSerilizer
 from rest_framework import status
 # Create your views here.
-
+from rest_framework.views import APIView
+from rest_framework import permissions, status
+from rest_framework.authentication import SessionAuthentication ,TokenAuthentication
 from rest_framework.exceptions import NotFound
 from .models import SessionDate, RoomSession
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+
 #################################### get whole sessions and post session ##########################################
 
 
@@ -97,3 +101,41 @@ def update_session(request, pk):
             data['available_dates'])
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class SingleDateRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = SessionDate
+    queryset = SessionDate.objects.all()
+
+
+
+
+class singleDateUpdateView(APIView):
+    permission_classes = [
+        permissions.IsAuthenticated,
+    ]
+    authentication_classes = (SessionAuthentication,TokenAuthentication)
+	
+    def patch(self, request,*args, **kwargs):
+        pk = kwargs['pk']
+
+        session = SessionDate.objects.get(id=pk)
+        serializer = singleDateSerilizer(session,data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        """
+        `Update single date`
+        """
+        # user = self.request.user
+        # serializer = singleDateSerilizer(user, data=request.data, partial=True)
+    def get(self  , request, *args, **kwargs):
+            pk = kwargs['pk']
+
+            session = SessionDate.objects.get(id=pk)
+            serializer = singleDateSerilizer(session)
+            print(session)
+            return Response(serializer.data)
+                
