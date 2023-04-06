@@ -20,7 +20,7 @@ class SessionDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SessionDate
-        fields = ('session_date', 'reserved', 'deruration',
+        fields = ('id','session_date', 'reserved', 'deruration',
                   'reserver', 'formatted_session_date')
 
     def get_formatted_session_date(self, obj):
