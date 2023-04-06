@@ -20,7 +20,7 @@ class SessionDateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SessionDate
-        fields = ('session_date', 'reserved', 'deruration',
+        fields = ('id', 'session_date', 'reserved', 'deruration',
                   'reserver', 'formatted_session_date')
 
     def get_formatted_session_date(self, obj):
@@ -53,12 +53,14 @@ class SessionViewSerializer(serializers.ModelSerializer):
     available_dates = SessionDateSerializer(many=True, read_only=True)
     # tags=TagSerializer(many=True, read_only=True)
     mentor = UserSerializer()
-    created_at = serializers.DateTimeField(format='%d %b')
+    # created_at = serializers.DateTimeField()
+    updated_at = serializers.DateTimeField(format='%d %b')
     # user_bio = serializers.SerializerMethodField(read_only=True)
     # bio = serializers.CharField(source='bio', read_only=True)
     time_since_created = serializers.SerializerMethodField()
     session_feedback = SessionFeedbackSerializer(many=True, read_only=True)
     user_feedback = serializers.SerializerMethodField()
+    created_at = serializers.DateTimeField()
 
     def get_user_feedback(self, obj):
         user = self.context['request'].user  # get_user_feedback_about_session
@@ -148,7 +150,7 @@ class SessionSerializer(serializers.ModelSerializer):
         # validated_data[
         #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
         validated_data[
-            'sessionUrl'] = f"http://127.0.0.1:3000/room/hash/{session_url_code}"
+            'sessionUrl'] = f"http://127.0.0.1:3000/room/{session_url_code}"
         return super().create(validated_data)
 
 
@@ -167,11 +169,35 @@ class RoomSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserPickedSessions(serializers.ModelSerializer):
-    available_dates = SessionDateSerializer(many=True, read_only=True)
+# mentor short selizer data
+class CustomeMentorSelizer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('email', 'username', 'name', 'user_profile')
+
+
+class CustomeRoomSessionSelizer(serializers.ModelSerializer):
+    mentor = CustomeMentorSelizer()
 
     class Meta:
-
         model = RoomSession
-        fields = ('title', 'sessionUrl', 'available_dates',
-                  'description', 'tags', 'description', 'mentor')
+        fields = ['title', 'mentor', 'sessionUrl', 'description']
+
+
+class UserPickedSessions(serializers.ModelSerializer):
+    session_room = serializers.SerializerMethodField()
+
+    def get_session_room(self, obj):
+        try:
+            print("obj__________________", obj)
+            room = RoomSession.objects.filter(available_dates=obj).first()
+
+            print('room_________________________', room)
+            return CustomeRoomSessionSelizer(instance=room).data
+        except:
+            return None
+
+    class Meta:
+        model = SessionDate
+        fields = ['session_room', 'session_date',
+                  'reserved', 'reserver', 'deruration']

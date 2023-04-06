@@ -179,4 +179,7 @@ class UserPickedSessionsView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        return RoomSession.objects.filter(available_dates__reserved=True, available_dates__reserver=user)
+        result = SessionDate.objects.filter(reserver=user,reserved=True)
+        # result = RoomSession.objects.filter(available_dates__reserved=True)
+        # print(result)
+        return result

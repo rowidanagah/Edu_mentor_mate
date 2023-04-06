@@ -90,7 +90,8 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     number_of_comments = serializers.SerializerMethodField()
     number_of_likes = serializers.SerializerMethodField()
     liked_by_user = serializers.SerializerMethodField()
-    created_at = serializers.DateTimeField(format='%d %b')
+    created_at = serializers.DateTimeField()
+    updated_at = serializers.DateTimeField(format='%d %b')
 
     def get_liked_by_user(self, obj):
         user = self.context['request'].user
