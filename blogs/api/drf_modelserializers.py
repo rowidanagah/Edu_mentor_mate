@@ -20,6 +20,16 @@ class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
 
+    def perform_create(self, serializer):
+        serializer.save()
+        self.update_user_fav_bins(serializer.instance)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    def update_user_fav_bins(self, instance):
+        user = self.request.user
+        tags = instance.tags.all()
+        user.favourite_bins.add(*tags)
+
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
     #     serializer.is_valid(raise_exception=True)
