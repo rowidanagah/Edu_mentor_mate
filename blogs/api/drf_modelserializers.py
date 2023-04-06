@@ -15,6 +15,8 @@ from django.db.models import Count, Subquery, OuterRef
 
 # =============================(list)====================================
 
+from rest_framework.views import exception_handler
+
 
 class createBlog(CreateAPIView):
     serializer_class = BlogModelSerializer
@@ -29,6 +31,12 @@ class createBlog(CreateAPIView):
         user = self.request.user
         tags = instance.tags.all()
         user.favourite_bins.add(*tags)
+
+    def handle_exception(self, exc):
+        response = exception_handler(exc, self.request)
+        if response is not None:
+            return Response({'error': response.data}, status=response.status_code)
+        return super().handle_exception(exc)
 
     # def create(self, request, *args, **kwargs):
     #     serializer = self.get_serializer(data=request.data)
