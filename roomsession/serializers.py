@@ -167,11 +167,42 @@ class RoomSessionSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class UserPickedSessions(serializers.ModelSerializer):
-    available_dates = SessionDateSerializer(many=True, read_only=True)
 
+
+
+
+class CustomeRoomSessionSelizer(serializers.ModelSerializer):
     class Meta:
+        model=RoomSession
+        fields= ['title','mentor','sessionUrl','description']
 
-        model = RoomSession
-        fields = ('title', 'sessionUrl', 'available_dates',
-                  'description', 'tags', 'description', 'mentor')
+
+
+
+
+
+
+
+
+
+
+
+
+class UserPickedSessions(serializers.ModelSerializer):
+    session_room =serializers.SerializerMethodField()
+
+
+    def get_session_room(self , obj):
+        try:
+            print("obj__________________",obj)
+            room =  RoomSession.objects.filter(available_dates=obj).first()
+
+            print('room_________________________',room)
+            return CustomeRoomSessionSelizer(instance=room).data
+        except:
+             return  None
+    
+    
+    class Meta:
+        model = SessionDate
+        fields = ['session_room','session_date','reserved','reserver','deruration']
