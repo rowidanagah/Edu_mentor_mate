@@ -1,3 +1,4 @@
+from reactions.serializers import SessionFeedback
 from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
@@ -8,6 +9,9 @@ from datetime import timedelta
 from reactions.models import Likes, Follow
 from accounts.serializers import UserModel
 from datetime import datetime
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from accounts.serializers import UserDetailsSerializer
+from reactions.serializers import SessionFeedbackSerializer
 
 
 class SessionDateSerializer(serializers.ModelSerializer):
@@ -53,6 +57,18 @@ class SessionViewSerializer(serializers.ModelSerializer):
     # user_bio = serializers.SerializerMethodField(read_only=True)
     # bio = serializers.CharField(source='bio', read_only=True)
     time_since_created = serializers.SerializerMethodField()
+    session_feedback = SessionFeedbackSerializer(many=True, read_only=True)
+    user_feedback = serializers.SerializerMethodField()
+
+    def get_user_feedback(self, obj):
+        user = self.context['request'].user  # get_user_feedback_about_session
+        print('-------------user-----------', self.context['request'])
+        print('-------------user-----------', obj)
+        submit_session = SessionFeedback.objects.filter(
+            student=user, session=obj)
+        print('-------------user-----------',
+              submit_session.exists())
+        return submit_session.exists()
 
     def get_time_since_created(self, obj):
         now = timezone.now()
@@ -71,7 +87,7 @@ class SessionViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomSession
-        fields = ('title', 'available_dates', 'mentor', 'description',
+        fields = ('id', 'title', 'available_dates', 'mentor', 'description', 'session_feedback', 'user_feedback',
                   'ended_at', 'sessionUrl', 'tags', 'updated_at', 'created_at', 'time_since_created',)
         # depth = 1
 
@@ -134,3 +150,12 @@ class SessionSerializer(serializers.ModelSerializer):
         validated_data[
             'sessionUrl'] = f"http://127.0.0.1:3000/room/hash/{session_url_code}"
         return super().create(validated_data)
+
+
+class singleDateSerilizer(serializers.ModelSerializer):
+    reserver = UserDetailsSerializer()
+
+    class Meta:
+
+        model = SessionDate
+        fields = "__all__"

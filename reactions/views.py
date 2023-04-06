@@ -1,3 +1,6 @@
+from rest_framework.generics import ListAPIView, CreateAPIView
+from .models import SessionFeedback
+from .serializers import SessionFeedbackCReateSerializer, SessionFeedbackSerializer
 from rest_framework import serializers
 from accounts.models import User
 from django.shortcuts import render
@@ -78,3 +81,13 @@ class followAPIView(APIView):
         serializer = self.serializer_class(follow)
         print('----------------------res data', serializer.data)
         return Response({'message': 'follow added', "data": serializer.data}, status=status.HTTP_201_CREATED)
+
+
+class SessionFeedbackAPIView(ListAPIView):
+    queryset = SessionFeedback.objects.all()
+    serializer_class = SessionFeedbackSerializer
+
+
+class SessionFeedbackCreateApi(CreateAPIView):
+    queryset = SessionFeedback.objects.all()
+    serializer_class = SessionFeedbackCReateSerializer
