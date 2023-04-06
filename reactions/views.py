@@ -90,6 +90,7 @@ class SessionFeedbackAPIView(ListAPIView):
 
 class SessionFeedbackCreateApi(CreateAPIView):
     queryset = SessionFeedback.objects.all()
+    serializer_class = SessionFeedbackCReateSerializer
 
 
 class SessionFeedbackList(ListAPIView):
@@ -102,5 +103,5 @@ class SessionFeedbackList(ListAPIView):
     #     return context
 
 
-class SessionFeedbackCreate(CreateAPIView):
-    serializer_class = SessionFeedbackCReateSerializer
+# class SessionFeedbackCreate(CreateAPIView):
+#     serializer_class = SessionFeedbackCReateSerializer
