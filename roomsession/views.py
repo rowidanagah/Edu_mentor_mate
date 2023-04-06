@@ -1,3 +1,5 @@
+from rest_framework import generics
+from .serializers import UserPickedSessions
 from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -159,3 +161,11 @@ class singleDateUpdateView(APIView):
         serializer = singleDateSerilizer(session)
         print(session)
         return Response(serializer.data)
+
+
+class UserPickedSessionsView(generics.ListAPIView):
+    serializer_class = UserPickedSessions
+
+    def get_queryset(self):
+        user = self.request.user
+        return RoomSession.objects.filter(available_dates__reserved=True, available_dates__reserver=user)
