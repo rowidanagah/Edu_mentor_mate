@@ -35,6 +35,8 @@ class TagSerializer(serializers.ModelSerializer):
         model = Tags
         fields = '__all__'
 
+# --------------- Create blog
+
 
 class BlogModelSerializer(serializers.ModelSerializer):
     # tags = TagSerializer(many=True, read_only=False)
@@ -46,6 +48,17 @@ class BlogModelSerializer(serializers.ModelSerializer):
         model = BLog
         fields = ('title', 'content', 'tags',
                   'mentor', 'session', 'cover_image')
+
+    def validate(self, attrs):
+        if 'content' not in attrs:
+            raise serializers.ValidationError(
+                {'content': 'content is required.'})
+
+        if 'mentor' not in attrs:
+            raise serializers.ValidationError(
+                {'mentor': 'mentor is required.'})
+
+        return attrs
 
     def create(self, validated_data):
         tag_names = validated_data.pop("tags")
