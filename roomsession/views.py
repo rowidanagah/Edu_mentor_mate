@@ -19,6 +19,15 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from django.urls import reverse
 
 
+def update_user_fav_bins(instance, user):
+    tags = instance.tags.all()
+
+    user.favourite_bins.add(*tags)
+    user.save()
+    print('----------------------USER tags-----------------------',
+          tags, user.favourite_bins)
+
+
 @api_view(['GET', 'POST'])
 def session_list(request):
     if request.method == 'GET':
@@ -31,6 +40,7 @@ def session_list(request):
 
         serializer = SessionViewSerializer(
             sessions, many=True, context={'request': request})
+
         return Response(serializer.data)
 
     if request.method == 'POST':
@@ -62,6 +72,7 @@ def session_list(request):
                 data['available_dates'])
             print('------------------tgas', tags_name)
             room_session.save_tags(tags_name)
+            update_user_fav_bins(room_session, request.user)
 
             # session_url = reverse('session-detail', args=[serializer.da.id])
 
