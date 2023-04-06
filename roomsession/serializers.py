@@ -1,3 +1,5 @@
+from reactions.serializers import SessionFeedbackSerializer
+from reactions.serializers import SessionFeedback
 from django.utils.crypto import get_random_string
 from rest_framework import serializers
 from roomsession.models import RoomSession, SessionDate
@@ -55,6 +57,18 @@ class SessionViewSerializer(serializers.ModelSerializer):
     # user_bio = serializers.SerializerMethodField(read_only=True)
     # bio = serializers.CharField(source='bio', read_only=True)
     time_since_created = serializers.SerializerMethodField()
+    session_feedback = SessionFeedbackSerializer(many=True, read_only=True)
+    user_feedback = serializers.SerializerMethodField()
+
+    def get_user_feedback(self, obj):
+        user = self.context['request'].user  # get_user_feedback_about_session
+        print('-------------user-----------', self.context['request'])
+        print('-------------user-----------', obj)
+        submit_session = SessionFeedback.objects.filter(
+            student=user, session=obj)
+        print('-------------user-----------',
+              submit_session.exists())
+        return submit_session.exists()
 
     def get_time_since_created(self, obj):
         now = timezone.now()
@@ -73,7 +87,7 @@ class SessionViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomSession
-        fields = ('id', 'title', 'available_dates', 'mentor', 'description',
+        fields = ('id', 'title', 'available_dates', 'mentor', 'description', 'session_feedback', 'user_feedback',
                   'ended_at', 'sessionUrl', 'tags', 'updated_at', 'created_at', 'time_since_created',)
         # depth = 1
 
