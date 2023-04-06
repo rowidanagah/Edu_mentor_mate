@@ -169,9 +169,18 @@ class RoomSessionSerializer(serializers.ModelSerializer):
 
 
 
+# mentor short selizer data
+class CustomeMentorSelizer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = ('email', 'username', 'name', 'user_profile')
+
+
+
 
 
 class CustomeRoomSessionSelizer(serializers.ModelSerializer):
+    mentor=CustomeMentorSelizer()
     class Meta:
         model=RoomSession
         fields= ['title','mentor','sessionUrl','description']
