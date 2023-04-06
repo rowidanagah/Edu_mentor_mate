@@ -148,7 +148,7 @@ class SessionSerializer(serializers.ModelSerializer):
         # validated_data[
         #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
         validated_data[
-            'sessionUrl'] = f"http://127.0.0.1:3000/room/hash/{session_url_code}"
+            'sessionUrl'] = f"http://127.0.0.1:3000/room/{session_url_code}"
         return super().create(validated_data)
 
 
