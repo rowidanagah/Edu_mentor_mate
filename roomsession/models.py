@@ -115,6 +115,12 @@ class RoomSession(models.Model):
             session_date_obj, _ = SessionDate.objects.get_or_create(
                 session_date=date_obj)
             session_date_obj.reserved = session_date['reserved']
+            if 'reserver' in session_date:
+                pick_user = User.objects.filter(
+                    user_id=session_date['reserver']).first()
+                session_date_obj.reserver = pick_user
+                print('------------', session_date)
+            # session_date_obj.reserver = session_date['reserver']
             session_date_obj.save()
 
             print("------------------------", session_date)

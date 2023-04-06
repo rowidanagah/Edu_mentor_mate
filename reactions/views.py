@@ -13,7 +13,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import GenericAPIView
 
-from .serializers import LikeSerializer, followSerializer
+from .serializers import LikeSerializer, followSerializer, SessionFeedbackCReateSerializer
 # Create your views here.
 
 
@@ -90,4 +90,17 @@ class SessionFeedbackAPIView(ListAPIView):
 
 class SessionFeedbackCreateApi(CreateAPIView):
     queryset = SessionFeedback.objects.all()
+
+
+class SessionFeedbackList(ListAPIView):
+    queryset = SessionFeedback.objects.all()
+    serializer_class = SessionFeedbackSerializer()
+
+    # def get_serializer_context(self):
+    #     context = super().get_serializer_context()
+    #     context[] = 'Some extra data'
+    #     return context
+
+
+class SessionFeedbackCreate(CreateAPIView):
     serializer_class = SessionFeedbackCReateSerializer

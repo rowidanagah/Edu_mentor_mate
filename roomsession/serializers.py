@@ -159,3 +159,19 @@ class singleDateSerilizer(serializers.ModelSerializer):
 
         model = SessionDate
         fields = "__all__"
+
+
+class RoomSessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RoomSession
+        fields = '__all__'
+
+
+class UserPickedSessions(serializers.ModelSerializer):
+    available_dates = SessionDateSerializer(many=True, read_only=True)
+
+    class Meta:
+
+        model = RoomSession
+        fields = ('title', 'sessionUrl', 'available_dates',
+                  'description', 'tags', 'description', 'mentor')
