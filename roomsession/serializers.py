@@ -124,12 +124,21 @@ class BlogSessionSerializer(serializers.ModelSerializer):
 
 
 class SessionSerializer(serializers.ModelSerializer):
-    available_dates = SessionDateSerializer(many=True, read_only=True)
+    available_dates = SessionDateSerializer(many=True)
 
     class Meta:
         model = RoomSession
         fields = ('title', 'available_dates', 'mentor',
                   'ended_at', 'sessionUrl', 'tags')
+
+    def validate(self, data):
+        """
+        Check if session_dates is not empty
+        """
+        if not data.get('available_dates'):
+            raise serializers.ValidationError({"available_dates": "session_dates cannot be empty"}
+                                              )
+        return data
 
     def validate_end_date(self, value):
         """
@@ -137,10 +146,20 @@ class SessionSerializer(serializers.ModelSerializer):
         """
         if value < timezone.now():
             raise serializers.ValidationError(
-                "End date cannot be in the past.")
+                {"end_date": "End date cannot be in the past."})
         return value
 
+    # def create(self, validated_data):
+    #     session_dates_data = validated_data.pop('session_dates')
+    #     room_session = RoomSession.objects.create(**validated_data)
+    #     for session_date_data in session_dates_data:
+    #         session_date = SessionDate.objects.create(**session_date_data)
+    #         room_session.session_dates.add(session_date)
+    #     return room_session
+
     def create(self, validated_data):
+        # session_dates_data = validated_data.pop('available_dates')
+        # print('--------sessions', session_dates_data)
         print('generate session_url')
         session_url_code = 'rs-{}-{}'.format(validated_data['mentor'],
                                              get_random_string(length=20))
