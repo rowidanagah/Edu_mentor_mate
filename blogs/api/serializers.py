@@ -1,3 +1,4 @@
+from roomsession.models import RoomSession
 from tags.models import Tags
 from comments.serializer import CommentSerializer
 from reactions.models import Likes, Follow
@@ -106,6 +107,11 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField()
     updated_at = serializers.DateTimeField(format='%d %b')
 
+    def get_queryset(self):
+        print('order')
+        # order the queryset by created field
+        return super().get_queryset().order_by('-created_at')
+
     def get_liked_by_user(self, obj):
         user = self.context['request'].user
         print('-------------user-----------', user)
@@ -143,6 +149,8 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
         model = BLog
         fields = ('id',  'liked_by_user', 'title', 'content', 'mentor', 'updated_at', 'number_of_likes', 'student_blog_comment',
                   'cover_image', 'created_at', 'tags', 'session', 'updated_at', 'time_since_created', 'number_of_comments')
+        # Add ordering option to order queryset by created_at field
+        ordering = ['-created_at', 'title']
 
     # def get_cover_image(self, obj):
     #     if obj.cover_image:
@@ -153,8 +161,34 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 
 
 class UserActivitiesSerializer(serializers.ModelSerializer):
+    # mentor_blog = BlogViewModelSerializer(many=True, read_only=True)
+    # mentor_session = SessionViewSerializer(many=True, read_only=True)
     mentor_blog = BlogViewModelSerializer(many=True, read_only=True)
-    mentor_session = SessionViewSerializer(many=True, read_only=True)
+    mentor_session = SessionViewSerializer(
+        many=True, read_only=True)
+
+    # def get_mentor_blog(self, obj):
+    #     # obj is the User instance
+    #     blogs = BLog.objects.filter(user=obj).order_by('-created')
+    #     return BlogSerializer(blogs, many=True).data
+
+    # def get_room_sessions(self, obj):
+    #     # obj is the User instance
+    #     room_sessions = RoomSession.objects.filter(
+    #         user=obj).order_by('-created')
+    #     return RoomSessionSerializer(room_sessions, many=True).data
+
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     mentor_blog = BLog.objects.filter(
+    #         mentor=instance).order_by('-created_at')
+    #     representation['mentor_blog'] = BlogViewModelSerializer(
+    #         mentor_blog, many=True).data
+    #     mentor_session = RoomSession.objects.filter(
+    #         mentor=instance).order_by('-created_at')
+    #     representation['mentor_session'] = SessionViewSerializer(
+    #         mentor_session, many=True).data
+    #     return representation
 
     class Meta:
         model = UserModel

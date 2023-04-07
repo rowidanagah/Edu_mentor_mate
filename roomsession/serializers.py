@@ -62,6 +62,10 @@ class SessionViewSerializer(serializers.ModelSerializer):
     user_feedback = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField()
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        return queryset.order_by('-created_at')
+
     def get_user_feedback(self, obj):
         user = self.context['request'].user  # get_user_feedback_about_session
         print('-------------user-----------', self.context['request'])
@@ -126,7 +130,7 @@ class BlogSessionSerializer(serializers.ModelSerializer):
 
 
 class SessionSerializer(serializers.ModelSerializer):
-    available_dates = SessionDateSerializer(many=True)
+    available_dates = SessionDateSerializer(many=True, read_only=True)
 
     class Meta:
         model = RoomSession
@@ -137,18 +141,28 @@ class SessionSerializer(serializers.ModelSerializer):
         """
         Check if session_dates is not empty
         """
-        if not data.get('available_dates'):
-            raise serializers.ValidationError({"available_dates": "session_dates cannot be empty"}
+        print(';;;;;;;;;;;;;;daa', data.get("ended_at"))
+        if not data.get('ended_at'):
+            raise serializers.ValidationError({"end_date": "end_date cannot be empty"}
                                               )
         return data
 
-    def validate_end_date(self, value):
+    # def validate_title(self, value):
+    #     if not value:
+    #         raise serializers.ValidationError(
+    #             "title is required.")
+    #     return value
+
+    def validate_ended_at(self, value):
         """
         Check that end_date is not in the past.
         """
-        if value < timezone.now():
+        if not value:
             raise serializers.ValidationError(
-                {"end_date": "End date cannot be in the past."})
+                "End date is required.")
+        if value < timezone.now().date():
+            raise serializers.ValidationError(
+                "End date cannot be in the past.")
         return value
 
     # def create(self, validated_data):

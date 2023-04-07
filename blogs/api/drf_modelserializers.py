@@ -175,7 +175,7 @@ class UserActivityAPIView(RetrieveUpdateDestroyAPIView):
     queryset = User.objects.all()
     print('------------------------order')
 
-    # def get_queryset(self):
-    #     print('---------------------------------order by')
-    #     queryset = super().get_queryset()
-    #     return queryset.prefetch_related('student_blog_comment').order_by('-created_at', '-student_blog_comment__created_at')
+    def get_queryset(self):
+        print('---------------------------------order by')
+        queryset = super().get_queryset()
+        return queryset.prefetch_related('mentor_blog').order_by('-mentor_blog__created_at')

@@ -49,40 +49,44 @@ def session_list(request):
         print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
-            print('-------ment', request.data['mentor'], request.data)
+            if request.data['available_dates']:
+                print('-------ment', request.data['mentor'], request.data)
 
-            room_session = serializer.save()
+                room_session = serializer.save()
 
-            data = request.data
-            print("------available_dates-------------------------",
-                  data['available_dates'])
+                data = request.data
+                print("------available_dates-------------------------",
+                      data['available_dates'])
 
-            # for session_date in request.data.get('available_dates'):
-            #     # try:
-            #     #     session_date_obj = SessionDate.objects.get(
-            #     #         id=session_date['id'])
-            #     #     print("------------session_date_obj ------------------",
-            #     #           session_date_obj)
-            #     # except SessionDate.DoesNotExist:
-            #     #     raise NotFound()
-            #     session_date_obj, _ = SessionDate.objects.get_or_create(
-            #         id=session_date['id'])
-            #     room_session.available_dates.add(session_date_obj)
+                # for session_date in request.data.get('available_dates'):
+                #     # try:
+                #     #     session_date_obj = SessionDate.objects.get(
+                #     #         id=session_date['id'])
+                #     #     print("------------session_date_obj ------------------",
+                #     #           session_date_obj)
+                #     # except SessionDate.DoesNotExist:
+                #     #     raise NotFound()
+                #     session_date_obj, _ = SessionDate.objects.get_or_create(
+                #         id=session_date['id'])
+                #     room_session.available_dates.add(session_date_obj)
 
-            room_session.save_session_available_dates(
-                data['available_dates'])
-            print('------------------tgas', tags_name)
-            room_session.save_tags(tags_name)
-            update_user_fav_bins(room_session, request.user)
+                room_session.save_session_available_dates(
+                    data['available_dates'])
+                print('------------------tgas', tags_name)
+                room_session.save_tags(tags_name)
+                update_user_fav_bins(room_session, request.user)
 
-            # session_url = reverse('session-detail', args=[serializer.da.id])
+                # session_url = reverse('session-detail', args=[serializer.da.id])
 
-            # data = {
-            #     request.data,
-            #     'url': request.build_absolute_uri(session_url),
+                # data = {
+                #     request.data,
+                #     'url': request.build_absolute_uri(session_url),
 
-            # }
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+                # }
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"available_dates": "session_dates cannot be empty"}, status=status.HTTP_400_BAD_REQUEST)
+        print('llllllllllllllllllllllllllllll', serializer.errors)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #################################### get specific session and delete specific session#############################
@@ -180,7 +184,7 @@ class UserPickedSessionsView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        result = SessionDate.objects.filter(reserver=user,reserved=True)
+        result = SessionDate.objects.filter(reserver=user, reserved=True)
         # result = RoomSession.objects.filter(available_dates__reserved=True)
         # print(result)
         return result
