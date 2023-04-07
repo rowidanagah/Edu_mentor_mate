@@ -6,7 +6,9 @@ from .serializer import CommentSerializer,CommentPostSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view
-
+from django.views.decorators.http import require_http_methods
+import json
+from django.http import JsonResponse
 # ================ Handle Comment Section ============
 
 class CommentList(ListCreateAPIView):
@@ -25,7 +27,7 @@ class CommentDetail(RetrieveUpdateDestroyAPIView):
 
     def put(self, request, *args, **kwargs):
         comment = self.get_object()
-        serializer = CommentSerializer(comment, data=request.data)
+        serializer = CommentPostSerializer(comment, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -59,5 +61,20 @@ def delete_specific_comment(request, pk):
     if request.method == 'DELETE':
         comment.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+    
 
+# @require_http_methods(["DELETE"])
+# def delete_specific_comment(request):
+#     try:
+#         data = json.loads(request.body)
+#         comment_id = data.get('comment_id')
+#         user_id = data.get('user_id')
+#         comment = Comment.objects.filter(id=comment_id, user_id=user_id).first()
+#         if comment:
+#             comment.delete()
+#             return JsonResponse({'success': True})
+#         else:
+#             return JsonResponse({'success': False, 'message': 'Comment not found or you are not authorized to delete it.'}, status=404)
 
+#     except Exception as e:
+#         return JsonResponse({'success': False, 'message': str(e)})

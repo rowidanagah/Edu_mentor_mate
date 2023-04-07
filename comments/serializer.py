@@ -13,6 +13,7 @@ class StudentSerializer(serializers.ModelSerializer):
 
 
 class CommentPostSerializer(serializers.ModelSerializer):
+    
     class Meta:
         model = Comment
         fields = ('content', 'student', 'blog', 'created_at', 'id')
