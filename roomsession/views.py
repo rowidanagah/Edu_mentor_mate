@@ -44,12 +44,13 @@ def session_list(request):
         return Response(serializer.data)
 
     if request.method == 'POST':
-        tags_name = request.data.pop('tags')
+        tags_name = request.data.pop('tags', [])
 
         print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
         if serializer.is_valid():
-            print('-------ment', request.data['mentor'])
+            print('-------ment', request.data['mentor'], request.data)
+
             room_session = serializer.save()
 
             data = request.data
