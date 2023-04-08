@@ -44,5 +44,9 @@ class BLog(models.Model):
     def get_blog_by_title(cls, title):
         return cls.objects.filter(title__contains=title)
 
+    @classmethod
+    def get_mentor_number_of_blogs(cls, mentor):
+        return cls.objects.filter(mentor=mentor).count()
+
     # def blog_has_session(self,blog):
     #     return blog.

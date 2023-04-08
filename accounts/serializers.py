@@ -52,7 +52,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = UserModel
-        fields = ('email', 'username', 'name', 'bio', 'phone', 'date_birth', 'facebook_link',
+        fields = ('email', 'username', 'name', 'bio', 'phone', 'facebook_link',
                   'github_link', 'instgram_link', 'user_profile', 'usertype', 'user_id', 'favourite_bins')
         # fields = "__all__"
         # exclude = ('password', )
@@ -61,7 +61,7 @@ class UserSerializer(serializers.ModelSerializer):
 class UserUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserModel
-        fields = ('name', 'bio', 'phone', 'date_birth', 'facebook_link',
+        fields = ('name', 'bio', 'phone', 'facebook_link',
                   'github_link', 'instgram_link', 'favourite_bins')
 
 # custome specilization serlizer
@@ -80,7 +80,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     name = serializers.CharField(max_length=50)
     phone = serializers.CharField(max_length=14)
     user_profile = serializers.ImageField()
-    date_birth = serializers.DateField()
+    # date_birth = serializers.DateField()
     usertype = serializers.CharField()
     # facebook_link = serializers.URLField()
     # github_link = serializers.URLField()
@@ -91,7 +91,7 @@ class CustomRegisterSerializer(RegisterSerializer):
         user.name = self.validated_data.get('name', '')
         user.phone = self.validated_data.get('phone', '')
         user.user_profile = self.validated_data.get('user_profile', '')
-        user.date_birth = self.validated_data.get('date_birth', '')
+        # user.date_birth = self.validated_data.get('date_birth', '')
         user.usertype = self.validated_data.get('usertype', '')
         # user.facebook_link=self.validated_data.get('facebook_link','')
         # user.github_link=self.validated_data.get('github_link','')
@@ -133,7 +133,7 @@ class CustomeUserDetailsSerilizer(UserDetailsSerializer):
     class Meta:
         model = UserModel
         fields = ('email', 'username', 'name', 'bio', 'phone',
-                  'date_birth', 'facebook_link', 'github_link', 'instgram_link')
+                  'facebook_link', 'github_link', 'instgram_link')
 
 
 # password reset done by default
