@@ -146,6 +146,10 @@ class Follow(models.Model):
         return obj
 
     @classmethod
+    def gte_number_of_follow(cls, user):
+        return cls.objects.filter(following_mentor=user).count()
+
+    @classmethod
     def get_student_followers_all_state(cls, student):
         # get all users following mentors
         return cls.objects.filter(student=student)

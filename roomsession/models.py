@@ -21,6 +21,7 @@ class SessionDate(models.Model):
         User, null=True, blank=True, related_name='user_reserve', on_delete=models.SET_NULL)
     deruration = models.TimeField(
         auto_now=False, auto_now_add=False, null=True)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
@@ -97,6 +98,10 @@ class RoomSession(models.Model):
         for tag_name in tag_names:
             tag, created = Tags.objects.get_or_create(caption=tag_name)
             self.tags.add(tag)
+
+    @classmethod
+    def get_mentor_number_of_sessions(cls, mentor):
+        return cls.objects.filter(mentor=mentor).count()
 
     def update_session_available_dates(self, available_dates):
         updated_session_dates = []

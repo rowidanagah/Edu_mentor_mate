@@ -1,3 +1,4 @@
+from django.db.models import Q
 from rest_framework import generics
 from .serializers import UserPickedSessions
 from django.shortcuts import render
@@ -31,6 +32,15 @@ def update_user_fav_bins(instance, user):
 @api_view(['GET', 'POST'])
 def session_list(request):
     if request.method == 'GET':
+        session_search_term = request.query_params.get('title')
+        if session_search_term:
+            sets = RoomSession.objects.all()
+            search_session = sets.filter(Q(title__icontains=session_search_term) | Q(
+                description__icontains=session_search_term))
+            sessions = SessionViewSerializer(
+                search_session,  many=True, context={'request': request})
+            return Response(sessions.data)
+
         user = request.user
         favorite_tags = user.favourite_bins.all()
         print('----------------------USER-----------------------',
@@ -44,7 +54,8 @@ def session_list(request):
         return Response(serializer.data)
 
     if request.method == 'POST':
-        tags_name = request.data.pop('tags')
+        if 'tags' in request.data:
+            tags_name = request.data.pop('tags')
 
         print('---------data', request.data)
         serializer = SessionSerializer(data=request.data)
@@ -179,7 +190,7 @@ class UserPickedSessionsView(generics.ListAPIView):
 
     def get_queryset(self):
         user = self.request.user
-        result = SessionDate.objects.filter(reserver=user,reserved=True)
+        result = SessionDate.objects.filter(reserver=user, reserved=True)
         # result = RoomSession.objects.filter(available_dates__reserved=True)
         # print(result)
         return result

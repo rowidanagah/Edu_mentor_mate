@@ -1,3 +1,4 @@
+from roomsession.models import RoomSession
 from tags.models import Tags
 from comments.serializer import CommentSerializer
 from reactions.models import Likes, Follow
@@ -43,10 +44,11 @@ class BlogModelSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(
         child=serializers.CharField(max_length=50), write_only=True
     )
+    session = BlogSessionSerializer()
 
     class Meta:
         model = BLog
-        fields = ('title', 'content', 'tags',
+        fields = ('title', 'content', 'tags', 'session',
                   'mentor', 'session', 'cover_image')
 
     def validate(self, attrs):
@@ -155,8 +157,34 @@ class BlogViewModelSerializer(serializers.ModelSerializer):
 class UserActivitiesSerializer(serializers.ModelSerializer):
     mentor_blog = BlogViewModelSerializer(many=True, read_only=True)
     mentor_session = SessionViewSerializer(many=True, read_only=True)
+    number_of_follows = serializers.SerializerMethodField()
+    number_of_blogs = serializers.SerializerMethodField()
+    number_of_sessions = serializers.SerializerMethodField()
+    followed_by_user = serializers.SerializerMethodField()
+
+    def get_followed_by_user(self, obj):
+        user = self.context['request'].user
+        print('-------------user-----------', user)
+        try:
+            follow = Follow.get_is_follow_mentor(
+                student=user, following_mentor=obj)
+            return follow.isfollow
+        except Follow.DoesNotExist:
+            return False
+
+    def get_number_of_follows(self, obj):
+        print('--------------obj---------------', obj)
+        return Follow.gte_number_of_follow(user=obj)
+
+    def get_number_of_sessions(self, obj):
+        print('--------------user---------------', obj)
+        return RoomSession.get_mentor_number_of_sessions(mentor=obj)
+
+    def get_number_of_blogs(self, obj):
+        print('--------------user---------------', obj)
+        return BLog.get_mentor_number_of_blogs(mentor=obj)
 
     class Meta:
         model = UserModel
-        fields = ('email', 'username', 'name', 'bio', 'phone',
+        fields = ('email', 'followed_by_user', 'username', 'name', 'bio', 'phone', 'number_of_follows', 'number_of_blogs', 'number_of_sessions',
                   'date_birth', 'facebook_link', 'github_link', 'instgram_link', 'mentor_session', 'mentor_blog', 'specializations', 'tools', 'user_profile', 'joinDate',)
