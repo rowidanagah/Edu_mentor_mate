@@ -194,3 +194,13 @@ class UserPickedSessionsView(generics.ListAPIView):
         # result = RoomSession.objects.filter(available_dates__reserved=True)
         # print(result)
         return result
+    
+# mintor picked sessions
+# get availables dates created by mentor and reserved
+class MintorPickedSessionsView(generics.ListAPIView):
+    serializer_class = UserPickedSessions
+
+    def get_queryset(self):
+        user = self.request.user
+        result = SessionDate.objects.filter(roomsession__mentor=user,reserved=True)
+        return result

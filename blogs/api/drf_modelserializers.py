@@ -1,3 +1,4 @@
+from roomsession.serializers import UserPickedSessions
 from accounts.models import User
 from rest_framework.response import Response
 from rest_framework.pagination import PageNumberPagination

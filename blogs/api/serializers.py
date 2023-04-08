@@ -1,3 +1,4 @@
+from roomsession.serializers import UserPickedSessions
 from roomsession.models import RoomSession
 from tags.models import Tags
 from comments.serializer import CommentSerializer
@@ -161,6 +162,10 @@ class UserActivitiesSerializer(serializers.ModelSerializer):
     number_of_blogs = serializers.SerializerMethodField()
     number_of_sessions = serializers.SerializerMethodField()
     followed_by_user = serializers.SerializerMethodField()
+    # user_reserved_sessions = UserPickedSessions
+
+    # def get_user_reserved_sessions(self, obj):
+    #     return SessionDate.objects.filter(roomsession__mentor=obj, reserved=True)
 
     def get_followed_by_user(self, obj):
         user = self.context['request'].user
