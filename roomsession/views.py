@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.db.models import Q
 from rest_framework import generics
 from .serializers import UserPickedSessions
@@ -64,6 +65,9 @@ def session_list(request):
             room_session = serializer.save()
 
             data = request.data
+            if not data['available_dates']:
+                return Response({"available_dates": "You can't"}, status=status.HTTP_400_BAD_REQUEST)
+
             print("------available_dates-------------------------",
                   data['available_dates'])
 
@@ -78,9 +82,14 @@ def session_list(request):
             #     session_date_obj, _ = SessionDate.objects.get_or_create(
             #         id=session_date['id'])
             #     room_session.available_dates.add(session_date_obj)
+            end_date = request.data['ended_at']
+            try:
+                room_session.save_session_available_dates(
+                    data['available_dates'], end_date)
+            except ValidationError as e:
+                room_session.delete()
+                return Response({"exceeds_end_date": e.message}, status=status.HTTP_400_BAD_REQUEST)
 
-            room_session.save_session_available_dates(
-                data['available_dates'])
             print('------------------tgas', tags_name)
             room_session.save_tags(tags_name)
             update_user_fav_bins(room_session, request.user)
@@ -194,13 +203,16 @@ class UserPickedSessionsView(generics.ListAPIView):
         # result = RoomSession.objects.filter(available_dates__reserved=True)
         # print(result)
         return result
-    
+
 # mintor picked sessions
 # get availables dates created by mentor and reserved
+
+
 class MintorPickedSessionsView(generics.ListAPIView):
     serializer_class = UserPickedSessions
 
     def get_queryset(self):
         user = self.request.user
-        result = SessionDate.objects.filter(roomsession__mentor=user,reserved=True)
+        result = SessionDate.objects.filter(
+            roomsession__mentor=user, reserved=True)
         return result

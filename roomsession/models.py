@@ -21,7 +21,8 @@ class SessionDate(models.Model):
         User, null=True, blank=True, related_name='user_reserve', on_delete=models.SET_NULL)
     deruration = models.TimeField(
         auto_now=False, auto_now_add=False, null=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
+    price = models.DecimalField(
+        max_digits=10, decimal_places=2, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
@@ -30,6 +31,10 @@ class SessionDate(models.Model):
         if self.session_date < timezone.now().date():
             raise ValidationError("The date cannot be in the past!")
         super(SessionDate, self).save(*args, **kwargs)
+
+
+ordering = ['1st', '2nd', '3rd', '4th',
+            '5th', '6th', '7th', '8th', '9th', '10th']
 
 
 class RoomSession(models.Model):
@@ -61,8 +66,8 @@ class RoomSession(models.Model):
         # return get_object_or_404(cls, pk=id)
         return cls.objects.get(id=id)
 
-    def save_session_available_dates(self, available_dates):
-        for session_date in available_dates:
+    def save_session_available_dates(self, available_dates, ended_at):
+        for i, session_date in enumerate(available_dates):
             print("----------SESSION---------------------------------",
                   type(session_date['session_date']), session_date)
 
@@ -77,6 +82,10 @@ class RoomSession(models.Model):
                 raise ValidationError('Invalid date')
 
             # date_obj = session_date['session_date']
+            if ended_at < session_date['session_date']:
+
+                raise ValidationError(
+                    f'your {ordering[i]} session date exceeds your end date ')
 
             print("----------SESSION---------------------------------",
                   session_date['session_date'], session_date['deruration'])
@@ -86,6 +95,7 @@ class RoomSession(models.Model):
                 session_date=date_obj)
             session_date_obj.reserved = session_date['reserved']
             session_date_obj.deruration = session_date['deruration']
+            session_date_obj.price = session_date.get('price', 0)
 
             # session_date_obj, _ = SessionDate.objects.get_or_create(
             #     session_date=session_date['session_date']

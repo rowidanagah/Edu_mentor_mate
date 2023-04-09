@@ -45,7 +45,7 @@ class BlogModelSerializer(serializers.ModelSerializer):
     tags = serializers.ListField(
         child=serializers.CharField(max_length=50), write_only=True
     )
-    session = BlogSessionSerializer()
+    # session = BlogSessionSerializer()
 
     class Meta:
         model = BLog
