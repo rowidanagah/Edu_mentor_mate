@@ -194,10 +194,6 @@ class UserPickedSessions(serializers.ModelSerializer):
     session_room = serializers.SerializerMethodField()
     formatted_session_date = serializers.SerializerMethodField()
 
-
-
-
-
     def get_formatted_session_date(self, obj):
         return obj.session_date.strftime("%B %d, %Y at %I:%M %p")
 
@@ -214,4 +210,4 @@ class UserPickedSessions(serializers.ModelSerializer):
     class Meta:
         model = SessionDate
         fields = ['session_room', 'session_date',
-                  'reserved', 'reserver', 'deruration','formatted_session_date']
+                  'reserved', 'reserver', 'deruration', 'formatted_session_date']
