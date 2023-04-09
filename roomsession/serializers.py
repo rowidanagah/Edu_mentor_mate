@@ -61,6 +61,10 @@ class SessionViewSerializer(serializers.ModelSerializer):
     session_feedback = SessionFeedbackSerializer(many=True, read_only=True)
     user_feedback = serializers.SerializerMethodField()
     created_at = serializers.DateTimeField()
+    session_dates_count = serializers.SerializerMethodField()
+
+    def get_session_dates_count(self, obj):
+        return obj.available_dates.count()
 
     def get_user_feedback(self, obj):
         user = self.context['request'].user  # get_user_feedback_about_session
@@ -89,7 +93,8 @@ class SessionViewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = RoomSession
-        fields = ('id', 'title', 'available_dates', 'mentor', 'description', 'session_feedback', 'user_feedback',
+        fields = ('id', 'title', 'available_dates', 'mentor', 'description',
+                  'session_feedback', 'user_feedback', 'session_dates_count',
                   'ended_at', 'sessionUrl', 'tags', 'updated_at', 'created_at', 'time_since_created',)
         # depth = 1
 
@@ -133,22 +138,23 @@ class SessionSerializer(serializers.ModelSerializer):
         fields = ('title', 'available_dates', 'mentor',
                   'ended_at', 'sessionUrl', 'tags')
 
-    def validate_end_date(self, value):
+    def validate_ended_at(self, value):
         """
         Check that end_date is not in the past.
         """
-        if value < timezone.now():
+        if value < timezone.now().date():
             raise serializers.ValidationError(
                 "End date cannot be in the past.")
         return value
 
     def create(self, validated_data):
         print('generate session_url')
-        session_url_code = 'rs-{}-{}'.format(validated_data['mentor'],
-                                             get_random_string(length=20))
+        session_url_code = 'rs{}{}'.format(validated_data['mentor'],
+                                           get_random_string(length=20))
 
         # validated_data[
         #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
+
         validated_data[
             'sessionUrl'] = f"http://127.0.0.1:3000/room/{session_url_code}"
         return super().create(validated_data)
