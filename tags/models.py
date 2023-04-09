@@ -6,7 +6,7 @@ from django.shortcuts import get_object_or_404
 
 
 class Tags(models.Model):
-    caption = models.CharField(max_length=20, primary_key=True)
+    caption = models.CharField(max_length=50, primary_key=True)
 
     def __str__(self):
         return f"{self.caption}"
@@ -23,6 +23,7 @@ class Category(models.Model):
                               height_field=None, width_field=None,
                               max_length=None)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
+
     def __str__(self):
         return self.name
 
@@ -36,7 +37,7 @@ class Category(models.Model):
     @classmethod
     def get_spesific_category(cls, cat_id):
         return cls.objects.filter(id=cat_id).first()
-    
+
 
 class Specialization(models.Model):
     major = models.CharField(null=False, blank=False, max_length=50)
@@ -49,7 +50,7 @@ class Specialization(models.Model):
 
 # could be a list&array of  charfield
 
+
 class Tools(models.Model):
     name = models.CharField(max_length=10, blank=False,
                             null=False, primary_key=True)
-

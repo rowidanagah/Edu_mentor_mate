@@ -77,12 +77,12 @@ class BlogModelSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         tag_names = validated_data.pop("tags")
-
         blog = BLog.objects.create(**validated_data)
-
+        print('taggggggggggg', tag_names)
         for tag_name in tag_names:
             tag, created = Tags.objects.get_or_create(caption=tag_name)
             blog.tags.add(tag)
+
         return blog
 
     # def create(self, validated_data):
