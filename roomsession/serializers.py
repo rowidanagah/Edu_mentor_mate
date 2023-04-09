@@ -156,7 +156,7 @@ class SessionSerializer(serializers.ModelSerializer):
         #     'sessionUrl'] = f"http://127.0.0.1:8000/roomsession/hall/{get_random_string(length=20)}{validated_data['mentor']}"
 
         validated_data[
-            'sessionUrl'] = f"http://127.0.0.1:3000/room/{session_url_code}"
+            'sessionUrl'] = f"http://localhost:3000/room/{session_url_code}"
         return super().create(validated_data)
 
 
@@ -192,6 +192,14 @@ class CustomeRoomSessionSelizer(serializers.ModelSerializer):
 
 class UserPickedSessions(serializers.ModelSerializer):
     session_room = serializers.SerializerMethodField()
+    formatted_session_date = serializers.SerializerMethodField()
+
+
+
+
+
+    def get_formatted_session_date(self, obj):
+        return obj.session_date.strftime("%B %d, %Y at %I:%M %p")
 
     def get_session_room(self, obj):
         try:
@@ -206,4 +214,4 @@ class UserPickedSessions(serializers.ModelSerializer):
     class Meta:
         model = SessionDate
         fields = ['session_room', 'session_date',
-                  'reserved', 'reserver', 'deruration']
+                  'reserved', 'reserver', 'deruration','formatted_session_date']
