@@ -32,7 +32,8 @@ urlpatterns = [
     path('', include('blogs.urls')),
     path('', include('tags.urls')),
     path('', include('comments.urls')),
-    path('', include('reactions.urls'))
+    path('', include('reactions.urls')),
+    path('jobs/', include('jobs.urls')),
 
 ]
 # ===(osama)===

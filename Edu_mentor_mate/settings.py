@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'comments',
     'roomsession',
     'django_filters',
+    'jobs',
 ]
 SITE_ID = 1
 
