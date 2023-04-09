@@ -66,6 +66,7 @@ def session_list(request):
 
             data = request.data
             if not data['available_dates']:
+                room_session.delete()
                 return Response({"available_dates": "You can't"}, status=status.HTTP_400_BAD_REQUEST)
 
             print("------available_dates-------------------------",
