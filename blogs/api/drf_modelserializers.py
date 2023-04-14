@@ -93,12 +93,19 @@ class MyPagination(PageNumberPagination):
 
 @api_view(['GET'])
 @authentication_classes([])
-@permission_classes([])
+@permission_classes([permissions.IsAuthenticatedOrReadOnly])
 def blog_trends(request):
+
     # blogs = Blog.objects.all()
-    blogs = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
+    # blogs = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
+    #     blog_reaction__isLike=True))).order_by('-num_true_likes')[:6]
+    blog = BLog.objects.all()
+    # blogs = BLog.objects.annotate(
+    #     num_Likes=Count('blog_reaction')).order_by('-num_Likes')
+    blogs_trend = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
         blog_reaction__isLike=True))).order_by('-num_true_likes')[:6]
-    serializer = BlogTrendsModelSerializer(blogs, many=True)
+
+    serializer = BlogTrendsModelSerializer(blogs_trend, many=True)
     return Response(serializer.data)
 
 # class blog_trends(generics.ListAPIView):
@@ -165,8 +172,11 @@ class bloglist(ListAPIView):
         print('------------------search-------------', blog_search_term)
 
         if blog_search_term:
+            queryset = BLog.objects.all()
+
             queryset = queryset.filter(Q(title__icontains=blog_search_term) | Q(
                 content__icontains=blog_search_term))
+            return queryset
 
         if blogs_trends:
             blog = BLog.objects.all()

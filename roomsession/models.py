@@ -22,7 +22,7 @@ class SessionDate(models.Model):
     deruration = models.TimeField(
         auto_now=False, auto_now_add=False, null=True)
     price = models.DecimalField(
-        max_digits=10, decimal_places=2, null=True, blank=True)
+        max_digits=10, decimal_places=2, null=True, blank=True, default=9.99)
 
     def save(self, *args, **kwargs):
         print("-------datetime-------", timezone.now().date())
@@ -96,6 +96,8 @@ class RoomSession(models.Model):
             session_date_obj.reserved = session_date['reserved']
             session_date_obj.deruration = session_date['deruration']
             session_date_obj.price = session_date.get('price', 0)
+            session_date_obj.price = 9.99 if not session_date_obj.price else session_date_obj.price
+            print('price---def--------', session_date_obj.price)
 
             # session_date_obj, _ = SessionDate.objects.get_or_create(
             #     session_date=session_date['session_date']
@@ -148,3 +150,6 @@ class RoomSession(models.Model):
         self.title = "title"
         self.available_dates.set(updated_session_dates)
         return updated_session_dates
+
+    def __str__(self) -> str:
+        return self.title

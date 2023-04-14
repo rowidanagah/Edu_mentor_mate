@@ -149,7 +149,9 @@ class SessionSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         print('generate session_url')
-        session_url_code = 'rs{}{}'.format(validated_data['mentor'],
+        userinfo = validated_data['mentor'].username.replace(" ", "")
+        print(userinfo)
+        session_url_code = 'rs{}{}'.format(userinfo,
                                            get_random_string(length=20))
 
         # validated_data[
