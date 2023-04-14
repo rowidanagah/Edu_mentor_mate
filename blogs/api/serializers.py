@@ -106,6 +106,21 @@ class BlogModelSerializer(serializers.ModelSerializer):
     #     return blog
 
 
+class UserinfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserModel
+        fields = '__all__'
+
+
+class BlogTrendsModelSerializer(serializers.ModelSerializer):
+    mentor = UserinfoSerializer()
+    updated_at = serializers.DateTimeField(format='%d %b')
+
+    class Meta:
+        model = BLog
+        fields = '__all__'
+
+
 class BlogViewModelSerializer(serializers.ModelSerializer):
     mentor = UserSerializer()
     student_blog_comment = CommentSerializer(

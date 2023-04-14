@@ -1,3 +1,10 @@
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
+from django.http import request
+from django.contrib.auth.models import AnonymousUser
+from rest_framework import generics, permissions
 from roomsession.serializers import UserPickedSessions
 from accounts.models import User
 from rest_framework.response import Response
@@ -8,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from blogs.models import BLog
-from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer, UserActivitiesSerializer
+from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer, UserActivitiesSerializer, BlogTrendsModelSerializer
 from reactions.models import Likes
 from rest_framework import status
 from django.db.models import Count, Subquery, OuterRef
@@ -82,6 +89,42 @@ class MyPagination(PageNumberPagination):
     page_size = 2  # number of items per page
     page_size_query_param = 'page_size'  # query parameter for page size
     max_page_size = 100  # maximum page size
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])
+def blog_trends(request):
+    # blogs = Blog.objects.all()
+    blogs = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
+        blog_reaction__isLike=True))).order_by('-num_true_likes')[:6]
+    serializer = BlogTrendsModelSerializer(blogs, many=True)
+    return Response(serializer.data)
+
+# class blog_trends(generics.ListAPIView):
+#     authentication_classes = []  # set authentication to None
+#     permission_classes = [permissions.AllowAny]
+#     queryset = BLog.objects.all()
+#     serializer_class = BlogViewModelSerializer
+
+#     def get_queryset(self):
+#         if self.request.user.is_authenticated:
+#             user_id = request.user.id
+#         else:
+#             user_id = None
+#         blog = BLog.objects.all()
+#         # blogs = BLog.objects.annotate(
+#         #     num_Likes=Count('blog_reaction')).order_by('-num_Likes')
+#         blogs_trend = BLog.objects.annotate(num_true_likes=Count('blog_reaction', filter=Q(
+#             blog_reaction__isLike=True))).order_by('-num_true_likes')[:6]
+
+#         # blogs_trend = BLog.objects.annotate(num_true_likes=Count(
+#         #     'blog_reaction')).order_by('-num_true_likes')
+
+#         return blogs_trend
+
+    #     # Assign user_id to your model field
+    #     my_model.user_id = user_id
 
 
 class bloglist(ListAPIView):

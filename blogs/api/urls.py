@@ -9,4 +9,5 @@ urlpatterns = [
          BlogRetrieveUpdateDestroyAPIView.as_view(), name='blogsupdate'),
     path('mentoractivity/<int:pk>',
          UserActivityAPIView.as_view(), name='mentor_activity'),
+    path('trends', blog_trends, name="blog_trends")
 ]
