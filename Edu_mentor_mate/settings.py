@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+import dj_database_url
+from dotenv import load_dotenv
 import os
 from .config import *
 from pathlib import Path
@@ -18,11 +20,16 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+load_dotenv(BASE_DIR / '.env')
+
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-6@%kq$vc5kql#$^zm*u0bn5=tpf&dclfv8!kx+r_-9vyn9l33f'
+
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -61,11 +68,6 @@ INSTALLED_APPS = [
 SITE_ID = 1
 
 
-
-
-
-
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -75,7 +77,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
-    
+
 ]
 # ######################################### token
 CORS_ORIGIN_WHITELIST = [
@@ -116,6 +118,8 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
+    # 'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
+
 
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -164,13 +168,15 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static"
-]
+# STATICFILES_DIRS = [
+#     BASE_DIR / "static"
+# ]
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -203,7 +209,6 @@ REST_FRAMEWORK = {
     #########
     'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
-
 
 
 ACCOUNT_USERNAME_REQUIRED = False
@@ -249,8 +254,7 @@ REST_AUTH = {
 }
 
 
-
-# email setting 
+# email setting
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_FROM = 'projectdjango823@gmail.com'
@@ -275,17 +279,17 @@ TINYMCE_DEFAULT_CONFIG = {
     'content_style': "body { font-family: Arial; background: white; color: black; font-size: 12pt}",
     'codesample_languages': [
         {'text': 'Python', 'value': 'python'}, {'text': 'HTML/XML', 'value': 'markup'},],
-    'image_class_list': [{'title': 'Fluid', 'value': 'img-fluid', 'style': {} }],
+    'image_class_list': [{'title': 'Fluid', 'value': 'img-fluid', 'style': {}}],
     'width': 'auto',
     "height": "600px",
     'image_caption': True,
 }
 
-# send email setting 
+# send email setting
 
 # config setting to email verifications
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_REQUIRED = True   
+ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
@@ -298,11 +302,11 @@ ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 LOGIN_URL = 'http://localhost:8000/api/dj-rest-auth/login'
 
-#Following is added to enable registration with email instead of username
+# Following is added to enable registration with email instead of username
 AUTHENTICATION_BACKENDS = (
- # Needed to login by username in Django admin, regardless of `allauth`
- "django.contrib.auth.backends.ModelBackend",
+    # Needed to login by username in Django admin, regardless of `allauth`
+    "django.contrib.auth.backends.ModelBackend",
 
- # `allauth` specific authentication methods, such as login by e-mail
- "allauth.account.auth_backends.AuthenticationBackend",
+    # `allauth` specific authentication methods, such as login by e-mail
+    "allauth.account.auth_backends.AuthenticationBackend",
 )
