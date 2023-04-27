@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import *
 
 
-
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, password, **extra_fields):
         email = self.normalize_email(email)
@@ -47,14 +46,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     # confirm_password = models.CharField(null=False, max_length=50)
     bio = models.TextField(null=True, max_length=150, blank=True)
     USER_TYPE_CHOICES = [
-      ("mentor", "Mentor"),
-      ("student", "Student")
+        ("mentor", "Mentor"),
+        ("student", "Student")
     ]
     usertype = models.CharField(max_length=10,
                                 choices=USER_TYPE_CHOICES,
                                 default="student")
     user_profile = models.ImageField(upload_to='images/accounts', blank=True)
-    
+
     phone_regex = RegexValidator(
         regex=r'^01[1|0|2|5][0-9]{8}$', message='phone must be an egyptian phone number...')
     phone = models.CharField(verbose_name="phone", null=True, validators=[
@@ -65,18 +64,19 @@ class User(AbstractBaseUser, PermissionsMixin):
     instgram_link = models.URLField(null=True)
     joinDate = models.DateField(auto_now_add=True)
     updated_at = models.DateField(auto_now=True)
-    favourite_bins = models.ManyToManyField(Tags, blank=True,null=True)
-    is_staff=models.BooleanField(default=True)
+    favourite_bins = models.ManyToManyField(Tags, blank=True)
+    is_staff = models.BooleanField(default=True)
     specializations = models.ForeignKey(
         Specialization, related_name="mentor_specialization", null=True, blank=True, on_delete=models.SET_NULL)  # major
     tools = models.ManyToManyField(
-        Tools, related_name="mentor_tools", blank=True , null=True)
-    is_active=models.BooleanField(default=True)
+        Tools, related_name="mentor_tools", blank=True)
+    is_active = models.BooleanField(default=True)
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
     objects = CustomUserManager()
+
     def __str__(self):
-		   return self.username
+        return self.username
 
 
 class StudentManger(models.Manager):
