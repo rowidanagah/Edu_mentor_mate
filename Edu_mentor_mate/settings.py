@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 import dj_database_url
 from dotenv import load_dotenv
 import os
-from .config import *
+# from .config import *
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
