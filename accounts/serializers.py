@@ -19,7 +19,8 @@ class UserRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, clean_data):
         user_obj = UserModel.objects.create_user(
-            email=clean_data['email'], password=clean_data['password'])
+            email=clean_data['email'], password=clean_data['password'],
+            is_active=True)
         user_obj.username = clean_data['username']
         user_obj.save()
         Token.objects.create(user=user_obj)
