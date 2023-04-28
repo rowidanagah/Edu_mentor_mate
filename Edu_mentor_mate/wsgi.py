@@ -15,4 +15,3 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Edu_mentor_mate.settings')
 
 
 application = get_wsgi_application()
-app = application
