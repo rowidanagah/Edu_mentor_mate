@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from .config import *
 import dj_database_url
 from dotenv import load_dotenv
 import os
@@ -19,17 +20,19 @@ from pathlib import Path
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# load_dotenv(BASE_DIR / '.env')
 
-load_dotenv(BASE_DIR / '.env')
+load_dotenv()
 
+print(os.environ.get('DATABASE_URL'), 'ddddddddd')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-6@%kq$vc5kql#$^zm*u0bn5=tpf&dclfv8!kx+r_-9vyn9l33f'
 
 SECRET_KEY = os.getenv('SECRET_KEY')
+
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -120,6 +123,9 @@ DATABASES = {
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
     'default': dj_database_url.parse(os.environ.get('DATABASE_URL'), conn_max_age=600),
+    # dj_database_url.parse('
+    # postgres://edumentormate_user:YeoIwR6mtVRMTGTxS0diGkbxSJURGu2S@dpg-ch5dd3jh4hsid6n00ncg-a.oregon-postgres.render.com/edumentormate', conn_max_age=600
+    # ),
 
 
     # 'default': {
