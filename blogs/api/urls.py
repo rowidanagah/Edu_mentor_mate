@@ -7,6 +7,9 @@ urlpatterns = [
     path('create_blog_api/', createBlog.as_view(), name='create_blog'),
     path('blogsapi/<int:pk>',
          BlogRetrieveUpdateDestroyAPIView.as_view(), name='blogsupdate'),
+    path('blogsapi_update/<int:pk>',
+         BlogUpdateAPIView.as_view(), name='blogsupdate'),
+
     path('mentoractivity/<int:pk>',
          UserActivityAPIView.as_view(), name='mentor_activity'),
     path('trends', blog_trends, name="blog_trends")

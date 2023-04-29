@@ -15,7 +15,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from blogs.models import BLog
-from blogs.api.serializers import BlogModelSerializer, BlogViewModelSerializer, UserActivitiesSerializer, BlogTrendsModelSerializer
+from blogs.api.serializers import BlogModelSerializer, BlogModelUpdateSerializer, BlogViewModelSerializer, UserActivitiesSerializer, BlogTrendsModelSerializer
 from reactions.models import Likes
 from rest_framework import status
 from django.db.models import Count, Subquery, OuterRef
@@ -221,6 +221,18 @@ class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         print('---------------------------------order by', res)
         return res
 
+
+class BlogUpdateAPIView(RetrieveUpdateDestroyAPIView):
+    serializer_class = BlogModelUpdateSerializer
+    queryset = BLog.objects.all()
+    print('------------------------order')
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+
+        res = queryset.prefetch_related('student_blog_comment').order_by(
+            '-student_blog_comment__created_at', '-student_blog_comment__content')
+        return res
 
 # =============================(Filter )=================================
 
