@@ -209,6 +209,7 @@ class bloglist(ListAPIView):
 # =============================(RetrieveUpdateDestroyAPIView)============
 class BlogRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
     serializer_class = BlogViewModelSerializer
+    # serializer_class = BlogModelSerializer
     queryset = BLog.objects.all()
     print('------------------------order')
 

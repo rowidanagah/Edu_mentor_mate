@@ -24,7 +24,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
 
-print(os.environ.get('DATABASE_URL'), 'ddddddddd')
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
@@ -126,8 +125,6 @@ DATABASES = {
     # dj_database_url.parse('
     # postgres://edumentormate_user:YeoIwR6mtVRMTGTxS0diGkbxSJURGu2S@dpg-ch5dd3jh4hsid6n00ncg-a.oregon-postgres.render.com/edumentormate', conn_max_age=600
     # ),
-
-
     # 'default': {
     #     'ENGINE': 'django.db.backends.postgresql',
     #     'NAME': DB_NAME,
@@ -262,13 +259,13 @@ REST_AUTH = {
 
 
 # email setting
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_FROM = 'projectdjango823@gmail.com'
-EMAIL_HOST_USER = 'projectdjango823@gmail.com'
-EMAIL_HOST_PASSWORD = 'snuecqvrghguiefc'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_FROM = 'projectdjango823@gmail.com'
+# EMAIL_HOST_USER = 'projectdjango823@gmail.com'
+# EMAIL_HOST_PASSWORD = 'snuecqvrghguiefc'
+# EMAIL_PORT = 587
+# EMAIL_USE_TLS = True
 
 PASSWORD_RESET_TIMEOUT = 14400
 
@@ -295,7 +292,7 @@ TINYMCE_DEFAULT_CONFIG = {
 # send email setting
 
 # config setting to email verifications
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+# ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
 # EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -304,8 +301,8 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_CONFIRM_EMAIL_ON_GET = True
+# ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 
 LOGIN_URL = 'http://localhost:8000/api/dj-rest-auth/login'
 
