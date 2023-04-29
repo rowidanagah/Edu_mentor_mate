@@ -38,6 +38,7 @@ DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
 
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
@@ -87,11 +88,12 @@ MIDDLEWARE = [
 ]
 # ######################################### token
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://blogingsessions.netlify.app/'
 ]
 # CSRF_COOKIE_NAME = "csrftoken"
 # CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
-# CORS_ALLOW_HEADERS = ['*']
+CORS_ALLOW_HEADERS = ['*']
 # CORS_ALLOW_CREDENTIALS = True
 # 33
 
