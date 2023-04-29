@@ -89,7 +89,7 @@ MIDDLEWARE = [
 # ######################################### token
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'https://blogingsessions.netlify.app/'
+    'https://blogingsessions.netlify.app'
 ]
 # CSRF_COOKIE_NAME = "csrftoken"
 # CSRF_HEADER_NAME = "HTTP_X_CSRFTOKEN"
